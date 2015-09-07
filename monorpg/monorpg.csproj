@@ -62,20 +62,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="MarkupTextEngine.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Extended">
-      <HintPath>..\packages\MonoGame.Extended.0.2.7-alpha\lib\MonoGame.Extended.dll</HintPath>
-    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MSBuildProgramFiles32)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="TiledSharp">
+      <HintPath>..\..\TiledSharp\TiledSharp\bin\Debug\TiledSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />

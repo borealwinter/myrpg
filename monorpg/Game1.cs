@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Toolkit;
+using System.Collections.Generic;
+using System.IO;
+using TiledSharp;
 
 namespace monorpg
 {
@@ -13,8 +15,18 @@ namespace monorpg
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Vector2 pos;
+        TmxMap map;
 
         private Texture2D circle;
+        private Texture2D tileset;
+
+        int sizeX;
+        int sizeY;
+
+        List<Rectangle> tileRects;
+
+        int tileWidth;
+        int tileHeight;
 
         public Game1()
         {
@@ -48,7 +60,28 @@ namespace monorpg
             spriteBatch = new SpriteBatch(GraphicsDevice);
             circle = Content.Load<Texture2D>("circle");
             pos = new Vector2();
-            // TODO: use this.Content to load your game content here
+
+            map = new TmxMap(Path.Combine(Content.RootDirectory, "../../../../","maps/test1.tmx"));
+            tileset = Content.Load<Texture2D>(map.Tilesets[0].Name.ToString());
+
+            sizeX = tileset.Width / 32;
+            sizeY = tileset.Height / 32;
+            int totalSize = sizeX * sizeY;
+
+            tileRects = new List<Rectangle>();
+            tileRects.Add(new Rectangle(0,0,0,0));
+
+            for (int i = 0; i < totalSize; i++)
+            {
+                int xx = (i % (tileset.Width/32)) * 32;
+                int yy = (i / (tileset.Width / 32)) * 32;
+
+                tileRects.Add(new Rectangle(xx, yy, 32, 32));
+            }
+
+            tileWidth = map.Tilesets[0].TileWidth;
+            tileHeight = map.Tilesets[0].TileHeight;
+
         }
 
         /// <summary>
@@ -122,10 +155,57 @@ namespace monorpg
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(circle, pos, Color.White);
+            //spriteBatch.Draw(tileset, pos, Color.White);
+
+            int k = 0;
+
+            foreach (var layer in map.Layers)
+            {
+                if (layer.Name.ToLower().Contains("background"))
+                {
+                    for (int j = 0; j < map.Height; j++)
+                    {
+                        for (int i = 0; i < map.Width; i++)
+                        {
+                            int gid = layer.Tiles[k].Gid;
+                            if (gid > 0)
+                            {
+                                spriteBatch.Draw(tileset, new Rectangle(i * 32, j * 32, 32, 32), tileRects[gid], Color.White);
+                            }
+
+                            k++;
+                        }
+                    }
+                }
+            }
+
+            //ToDo: Print Object Layer
+
+            k = 0;
+            foreach (var layer in map.Layers)
+            {
+                if (layer.Name.ToLower().Contains("foreground"))
+                {
+                    for (int j = 0; j < map.Height; j++)
+                    {
+                        for (int i = 0; i < map.Width; i++)
+                        {
+                            int gid = layer.Tiles[k].Gid;
+
+                            if (gid > 0)
+                            {
+                                spriteBatch.Draw(tileset, new Rectangle(i * 32, j * 32, 32, 32), tileRects[gid], Color.White);
+                            }
+                            
+                            k++;
+                        }
+                    }
+                }
+            }
+
+            // ToDo: Print any dialogs
 
             spriteBatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
