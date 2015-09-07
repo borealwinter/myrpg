@@ -12,6 +12,7 @@ namespace monorpg
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Vector2 pos;
 
         private Texture2D circle;
 
@@ -19,6 +20,7 @@ namespace monorpg
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            
         }
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace monorpg
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             circle = Content.Load<Texture2D>("circle");
+            pos = new Vector2();
             // TODO: use this.Content to load your game content here
         }
 
@@ -62,8 +65,45 @@ namespace monorpg
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Input.UpdateInput();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (Input.Up)
+            {
+                pos.Y -= 3;
+                if (pos.Y < 0.0f)
+                {
+                    pos.Y = 0.0f;
+                }
+            }
+
+            if (Input.Down)
+            {
+                pos.Y += 3;
+                if (pos.Y > (graphics.GraphicsDevice.PresentationParameters.BackBufferHeight - circle.Height))
+                {
+                    pos.Y = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight - circle.Height;
+                }
+            }
+
+            if (Input.Left)
+            {
+                pos.X -= 3;
+                if (pos.X < 0.0f)
+                {
+                    pos.X = 0.0f;
+                }
+            }
+
+            if (Input.Right)
+            {
+                pos.X += 3;
+                if (pos.X > (graphics.GraphicsDevice.PresentationParameters.BackBufferWidth - circle.Width))
+                {
+                    pos.X = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth - circle.Width;
+                }
+            }
 
             // TODO: Add your update logic here
 
@@ -80,7 +120,7 @@ namespace monorpg
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(circle, new Vector2(50.0f, 50.0f), Color.White);
+            spriteBatch.Draw(circle, pos, Color.White);
 
             spriteBatch.End();
             // TODO: Add your drawing code here
