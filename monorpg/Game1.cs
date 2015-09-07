@@ -13,6 +13,8 @@ namespace monorpg
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        private Texture2D circle;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -40,7 +42,7 @@ namespace monorpg
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            circle = Content.Load<Texture2D>("circle");
             // TODO: use this.Content to load your game content here
         }
 
@@ -76,6 +78,11 @@ namespace monorpg
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(circle, new Vector2(50.0f, 50.0f), Color.White);
+
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
