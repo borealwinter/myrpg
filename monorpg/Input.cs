@@ -18,15 +18,71 @@ namespace monorpg
     /// </summary>
     public struct GameButtons
     {
+        /// <summary>
+        /// Up button 
+        /// </summary>
         public bool UpButton;
+
+        /// <summary>
+        /// Down button
+        /// </summary>
         public bool DownButton;
+
+        /// <summary>
+        /// Left button
+        /// </summary>
         public bool LeftButton;
+
+        /// <summary>
+        /// Right button
+        /// </summary>
         public bool RightButton;
+
+        /// <summary>
+        /// Action button
+        /// </summary>
         public bool ActionButton;
+
+        /// <summary>
+        /// Cancel button
+        /// </summary>
         public bool CancelButton;
+
+        /// <summary>
+        /// Menu button
+        /// </summary>
         public bool MenuButton;
     }
 
+    /// <summary>
+    /// Detail State of Game Buttons
+    /// </summary>
+    public enum GameButtonState
+    {
+        /// <summary>
+        /// Button has been inactive the past two frames
+        /// </summary>
+        NoAction,
+
+        /// <summary>
+        /// Button has been down the past two frames
+        /// </summary>
+        HeldDown,
+
+        /// <summary>
+        /// Button is down this frame, but not the last
+        /// </summary>
+        NewlyPressed,
+
+        /// <summary>
+        /// Button was down in the previous frame, but not in the current one
+        /// </summary>
+        JustReleased
+    }
+
+    /// <summary>
+    /// This handles the input for the game
+    /// </summary>
     public static class Input
     {
         #region Constructor
@@ -67,7 +123,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.LeftKey() == 1 || Input.LeftKey() == 2)
+                if (Input.LeftKey() == GameButtonState.NewlyPressed || Input.LeftKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -85,7 +141,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.RightKey() == 1 || Input.RightKey() == 2)
+                if (Input.RightKey() == GameButtonState.NewlyPressed || Input.RightKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -103,7 +159,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.UpKey() == 1 || Input.UpKey() == 2)
+                if (Input.UpKey() == GameButtonState.NewlyPressed || Input.UpKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -121,7 +177,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.DownKey() == 1 || Input.DownKey() == 2)
+                if (Input.DownKey() == GameButtonState.NewlyPressed || Input.DownKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -139,7 +195,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.ActionKey() == 1 || Input.ActionKey() == 2)
+                if (Input.ActionKey() == GameButtonState.NewlyPressed || Input.ActionKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -157,7 +213,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.CancelKey() == 1 || Input.CancelKey() == 2)
+                if (Input.CancelKey() == GameButtonState.NewlyPressed || Input.CancelKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -175,7 +231,7 @@ namespace monorpg
         {
             get
             {
-                if (Input.MenuKey() == 1 || Input.MenuKey() == 2)
+                if (Input.MenuKey() == GameButtonState.NewlyPressed || Input.MenuKey() == GameButtonState.HeldDown)
                 {
                     return true;
                 }
@@ -316,168 +372,168 @@ namespace monorpg
         /// <summary>
         /// Returns state of Left Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte LeftKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState LeftKey()
         {
             if ((_last.LeftButton == false) && (_current.LeftButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.LeftButton == false) && (_current.LeftButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.LeftButton == true) && (_current.LeftButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Right Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte RightKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState RightKey()
         {
             if ((_last.RightButton == false) && (_current.RightButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.RightButton == false) && (_current.RightButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.RightButton == true) && (_current.RightButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Up Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte UpKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState UpKey()
         {
             if ((_last.UpButton == false) && (_current.UpButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.UpButton == false) && (_current.UpButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.UpButton == true) && (_current.UpButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Down Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte DownKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState DownKey()
         {
             if ((_last.DownButton == false) && (_current.DownButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.DownButton == false) && (_current.DownButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.DownButton == true) && (_current.DownButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Action Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte ActionKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState ActionKey()
         {
             if ((_last.ActionButton == false) && (_current.ActionButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.ActionButton == false) && (_current.ActionButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.ActionButton == true) && (_current.ActionButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Cancel Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte CancelKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState CancelKey()
         {
             if ((_last.CancelButton == false) && (_current.CancelButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.CancelButton == false) && (_current.CancelButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.CancelButton == true) && (_current.CancelButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
         /// <summary>
         /// Returns state of Menu Key
         /// </summary>
-        /// <returns>0 if not pressed, 1 if newly pressed, 2 if button is held down, 3 when button is just released</returns>
-        public static byte MenuKey()
+        /// <returns>GameButtonState object</returns>
+        public static GameButtonState MenuKey()
         {
             if ((_last.MenuButton == false) && (_current.MenuButton == false))
             {
-                return 0;
+                return GameButtonState.NoAction;
             }
             else if ((_last.MenuButton == false) && (_current.MenuButton == true))
             {
-                return 1;
+                return GameButtonState.NewlyPressed;
             }
             else if ((_last.MenuButton == true) && (_current.MenuButton == true))
             {
-                return 2;
+                return GameButtonState.HeldDown;
             }
             else
             {
-                return 3;
+                return GameButtonState.JustReleased;
             }
         }
 
