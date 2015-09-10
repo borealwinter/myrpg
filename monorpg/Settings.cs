@@ -43,6 +43,9 @@ namespace monorpg
         /// </summary>
         public static ContentManager Content { get; set; }
 
+        /// <summary>
+        /// Returns current screen size
+        /// </summary>
         public static Vector2 ScreenSize
         {
             get
