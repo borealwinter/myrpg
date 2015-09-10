@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="45" tilewidth="32" tileheight="32" nextobjectid="15">
+ <tileset firstgid="1" name="GrittyFutureInside01" tilewidth="32" tileheight="32">
+  <image source="../images/GrittyFutureInside01.png" width="960" height="512"/>
+ </tileset>
+ <layer name="background1" width="60" height="45">
+  <data encoding="base64" compression="zlib">
+   eJzt0zERgEAQBMFbOW+QNwJGwCDho4Aqjg5awAQzqmr8zJb+Zlbvnv6OR++Z/q68/w0AAAAAAAAAAADfdQPEOvnn
+  </data>
+ </layer>
+ <objectgroup name="objectlayer">
+  <object id="1" x="30" y="1375" width="666" height="65"/>
+  <object id="2" x="697" y="1376" width="510" height="66"/>
+  <object id="3" x="1211" y="1379" width="193" height="61"/>
+  <object id="4" x="1444" y="1379" width="445" height="95"/>
+  <object id="5" x="1891" y="983" width="26" height="389"/>
+  <object id="6" x="1889" y="721" width="38" height="265"/>
+  <object id="7" x="1891" y="415" width="30" height="286"/>
+  <object id="8" x="1890" y="8" width="34" height="650"/>
+  <object id="9" x="1669" y="92" width="215" height="32"/>
+  <object id="10" x="1449.5" y="90" width="215" height="32"/>
+  <object id="11" x="910" y="93" width="536.5" height="32"/>
+  <object id="12" x="321" y="93" width="586.5" height="32"/>
+  <object id="13" x="29" y="94" width="286.5" height="32"/>
+  <object id="14" x="1.5" y="128" width="25.5" height="1249"/>
+ </objectgroup>
+ <layer name="foreground1" width="60" height="45" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt2sENgCAUBFHomUKQQtBG6ElItAE9MX8m2aMkL3ik5JRGkJW5ay5KXS86vez0stPLTi87vez0stPLTi87vez0stPLTi87vez0stPLTi87vez0stPLLqJ3vbE7Nll77qZ+/H5Zz432/ov9xxk3OgezUw==
+  </data>
+ </layer>
+</map>

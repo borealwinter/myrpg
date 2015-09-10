@@ -28,10 +28,64 @@ namespace monorpg
         private static int _numBackgroundLayers;
         private static int _numForegroundLayers;
         private static List<TmxObjectGroup> _objectGroups;
+        private static Vector2 _offset;
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Is the map larger than a screen-sized map?
+        /// </summary>
+        public static bool IsScrollable { get; set; }
+
+        /// <summary>
+        /// Gets map offset 
+        /// </summary>
+        public static Vector2 Offset
+        {
+            get
+            {
+                return _offset;
+            }
+
+            set
+            {
+                _offset = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the horizontal offset
+        /// </summary>
+        public static float OffsetX
+        {
+            get
+            {
+                return _offset.X;
+            }
+
+            set
+            {
+                _offset.X = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the vertical offset
+        /// </summary>
+        public static float OffsetY
+        {
+            get
+            {
+                return _offset.Y;
+            }
+
+            set
+            {
+                _offset.Y = value;
+            }
+        }
 
         /// <summary>
         /// Returns list of object groups in map
@@ -52,8 +106,8 @@ namespace monorpg
             get
             {
                 return (from TmxLayer background in _map.Layers
-                            where background.Name.ToLower().Contains("background")
-                            select background).ToList();
+                        where background.Name.ToLower().Contains("background")
+                        select background).ToList();
             }
         }
 
@@ -159,7 +213,7 @@ namespace monorpg
         {
             get
             {
-                return _sizex + Settings.TileSize;
+                return _sizex * Settings.TileSize;
             }
         }
 
@@ -222,17 +276,17 @@ namespace monorpg
             string name = String.Concat(mapName, ".tmx");
             _map = new TmxMap(Path.Combine(Settings.ContentFolder, "../../../../", "maps", name));
             _tileset = Settings.Content.Load<Texture2D>(_map.Tilesets[0].Name.ToString());
-            _sizex = _tileset.Width / Settings.TileSize;
-            _sizey = _tileset.Height / Settings.TileSize;
+            _sizex = _map.Width;
+            _sizey = _map.Height;
             _tiles = new List<Rectangle>();
             _tiles.Add(new Rectangle(0, 0, 0, 0));
 
             for (int i = 0; i < TilesPerLayer; i++)
             {
-                int x = (i % (_tileset.Width / 32)) * 32;
-                int y = (i / (_tileset.Width / 32)) * 32;
+                int x = (i % (_tileset.Width / Settings.TileSize)) * Settings.TileSize;
+                int y = (i / (_tileset.Width / Settings.TileSize)) * Settings.TileSize;
 
-                _tiles.Add(new Rectangle(x, y, 32, 32));
+                _tiles.Add(new Rectangle(x, y, Settings.TileSize, Settings.TileSize));
             }
 
             _numBackgroundLayers = (from TmxLayer background in _map.Layers
@@ -246,7 +300,11 @@ namespace monorpg
             _numLayers = _numBackgroundLayers + _numForegroundLayers + 1;
 
             _objectGroups = (from TmxObjectGroup objectGroup in _map.ObjectGroups
-                                                        select objectGroup).ToList(); 
+                             select objectGroup).ToList();
+
+            IsScrollable = (_map.Width > 20 || _map.Height > 15) ? true : false;
+
+            _offset = new Vector2(0f, 0f);
         }
 
         /// <summary>
@@ -256,6 +314,8 @@ namespace monorpg
         public static void Draw()
         {
             int k = 0;
+
+            // Wait until map is loaded to prevent null reference error
             if (IsMapLoaded)
             {
                 foreach (var layer in _map.Layers)
@@ -269,9 +329,14 @@ namespace monorpg
                                 int gid = layer.Tiles[k].Gid;
                                 if (gid > 0)
                                 {
-                                    Settings.SpriteBatch.Draw(_tileset, new Rectangle(i * 32, j * 32, 32, 32), _tiles[gid], Color.White);
-                                }
+                                    int xDraw = ((i * 32)) - (int)_offset.X;
+                                    int yDraw = ((j * 32)) - (int)_offset.Y;
 
+                                    if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+                                    {
+                                        Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                    }
+                                }
                                 k++;
                             }
                         }
@@ -290,19 +355,22 @@ namespace monorpg
                             for (int i = 0; i < _map.Width; i++)
                             {
                                 int gid = layer.Tiles[k].Gid;
-
                                 if (gid > 0)
                                 {
-                                    Settings.SpriteBatch.Draw(_tileset, new Rectangle(i * 32, j * 32, 32, 32), _tiles[gid], Color.White);
-                                }
+                                    int xDraw = ((i * 32)) - (int)_offset.X;
+                                    int yDraw = ((j * 32)) - (int)_offset.Y;
 
+                                    if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+                                    {
+                                        Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                    }
+                                }
                                 k++;
                             }
                         }
                     }
                 }
             }
-
             // ToDo: Print any textboxes
         }
 

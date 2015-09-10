@@ -52,7 +52,7 @@ namespace monorpg
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Settings.SpriteBatch = spriteBatch;
 
-            Map.Load("test1");
+            Map.Load("test2");
 
         }
 
@@ -78,38 +78,38 @@ namespace monorpg
 
             if (Input.Up)
             {
-                //pos.Y -= 3;
-                //if (pos.Y < 0.0f)
-                //{
-                //    pos.Y = 0.0f;
-                //}
+                Map.OffsetY -= 5f;
+                if (Map.OffsetY < 0)
+                {
+                    Map.OffsetY = 0f;
+                }
             }
 
             if (Input.Down)
             {
-                //pos.Y += 3;
-                //if (pos.Y > (graphics.GraphicsDevice.PresentationParameters.BackBufferHeight - circle.Height))
-                //{
-                //    pos.Y = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight - circle.Height;
-                //}
+                Map.OffsetY += 5f;
+                if (Map.OffsetY > Map.Height - Settings.ScreenSize.Y)
+                {
+                    Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                }
             }
 
             if (Input.Left)
             {
-                //pos.X -= 3;
-                //if (pos.X < 0.0f)
-                //{
-                //    pos.X = 0.0f;
-                //}
+                Map.OffsetX -= 5f;
+                if (Map.OffsetX < 0)
+                {
+                    Map.OffsetX = 0f;
+                }
             }
 
             if (Input.Right)
             {
-                //pos.X += 3;
-                //if (pos.X > (graphics.GraphicsDevice.PresentationParameters.BackBufferWidth - circle.Width))
-                //{
-                //    pos.X = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth - circle.Width;
-                //}
+                Map.OffsetX += 5f;
+                if (Map.OffsetX > Map.Width - Settings.ScreenSize.X)
+                {
+                    Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                }
             }
 
             // TODO: Add your update logic here

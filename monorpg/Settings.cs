@@ -43,13 +43,13 @@ namespace monorpg
         /// </summary>
         public static ContentManager Content { get; set; }
 
-        //public static Rectangle ScreenSize
-        //{
-        //    get
-        //    {
-        //        return new Rectangle(0,0,)
-        //    }
-        //}
+        public static Vector2 ScreenSize
+        {
+            get
+            {
+                return new Vector2(640, 480);
+            }
+        }
 
     }
 }
