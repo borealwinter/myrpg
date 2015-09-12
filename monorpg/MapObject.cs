@@ -13,7 +13,7 @@ using TiledSharp;
 namespace monorpg
 {
     /// <summary>
-    /// Abstract class of objects player interact with on map.
+    /// Abstract class of objects that the player interacts with on map.
     /// </summary>
     public abstract class MapObject : IComparable<MapObject>
     {
@@ -26,19 +26,6 @@ namespace monorpg
         {
             _boundingBox = new Rectangle(0, 0, 0, 0);
             _position = Vector2.Zero;
-        }
-
-        /// <summary>
-        /// Instant instantiation
-        /// </summary>
-        /// <param name="x">x position</param>
-        /// <param name="y">y position</param>
-        /// <param name="width">width</param>
-        /// <param name="height">height</param>
-        public MapObject(float x, float y, int width, int height)
-        {
-            _position = new Vector2(x, y);
-            _boundingBox = new Rectangle((int)_position.X,(int)_position.Y, width, height);
         }
 
         #endregion
@@ -80,7 +67,7 @@ namespace monorpg
         /// <summary>
         /// Bottom edge of the bounding box.
         /// </summary>
-        public virtual float Bottom
+        public virtual float BottomEdge
         {
             get
             {
@@ -89,13 +76,35 @@ namespace monorpg
         }
 
         /// <summary>
+        /// Top edge of bounding box
+        /// </summary>
+        public virtual float TopEdge
+        {
+            get
+            {
+                return this._position.Y;
+            }
+        }
+
+        /// <summary>
         /// Right edge of the bounding box
         /// </summary>
-        public virtual float Right
+        public virtual float RightEdge
         {
             get
             {
                 return this._position.X + this._boundingBox.Width;
+            }
+        }
+
+        /// <summary>
+        /// Left edge of the bounding box
+        /// </summary>
+        public virtual float LeftEdge
+        {
+            get
+            {
+                return this._position.X;
             }
         }
 
@@ -121,8 +130,8 @@ namespace monorpg
         /// <returns>-1 if  this is lower than other, 1 if higher, 0 if equal</returns>
         public int CompareTo(MapObject other)
         {
-            if (this.Bottom < other.Bottom) return -1;
-            else if (this.Bottom > other.Bottom) return 1;
+            if (this.BottomEdge < other.BottomEdge) return -1;
+            else if (this.BottomEdge > other.BottomEdge) return 1;
             else return 0;
         }
 
@@ -161,18 +170,12 @@ namespace monorpg
         /// <summary>
         /// Update Cycle
         /// </summary>
-        public virtual void Update()
-        {
-
-        }
+        public abstract void Update();
 
         /// <summary>
         /// Draw Cycle
         /// </summary>
-        public virtual void Draw()
-        {
-
-        }
+        public abstract void Draw();
 
         #endregion
 
