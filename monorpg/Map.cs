@@ -342,7 +342,6 @@ namespace monorpg
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -375,7 +374,6 @@ namespace monorpg
                     }
                 }
             }
-
         }
 
         /// <summary>
@@ -384,8 +382,6 @@ namespace monorpg
         /// </summary>
         public static void Draw()
         {
-            int k = 0;
-
             // Wait until map is loaded to prevent null reference error
             if (IsMapLoaded)
             {
