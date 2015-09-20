@@ -105,7 +105,7 @@ namespace monorpg
         /// Tint of the sprite
         /// </summary>
         protected Color _color;
-        
+
         #endregion
 
         #region Properties

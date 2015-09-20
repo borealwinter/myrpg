@@ -29,6 +29,30 @@ namespace monorpg
         }
         #endregion
 
+        #region Fields
+
+       
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Screen position of player
+        /// </summary>
+        public override Vector2 ScreenPosition
+        {
+            get
+            {
+                return base.ScreenPosition;
+            }
+            set
+            {
+                base.ScreenPosition = value;
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// Updates player
         /// </summary>
@@ -37,6 +61,21 @@ namespace monorpg
             base.Update();
         }
 
+        /// <summary>
+        /// Draws Player in Center position
+        /// </summary>
+        public override void Draw()
+        {
+            Settings.SpriteBatch.Draw(_spriteSheet, Settings.DefaultPersonPosition, _sourceRect, _color);
+        }
 
+        /// <summary>
+        /// Draws Player at Coordinates
+        /// </summary>
+        /// <param name="position"></param>
+        public void Draw(Vector2 position)
+        {
+            Settings.SpriteBatch.Draw(_spriteSheet, position, _sourceRect, _color);
+        }
     }
 }

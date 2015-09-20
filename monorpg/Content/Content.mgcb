@@ -46,3 +46,9 @@
 /processorParam:TextureFormat=Color
 /build:Albert.png
 
+#begin ExFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:ExFont.spritefont
+

@@ -268,7 +268,7 @@ namespace monorpg
         /// <returns>true if we have halted processing of movement buttons</returns>
         public static bool IsMovementFrozen()
         {
-            return _movementFrozen; 
+            return _movementFrozen;
         }
 
         /// <summary>
@@ -322,6 +322,24 @@ namespace monorpg
             {
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Returns true if any of the direction buttons are down
+        /// </summary>
+        /// <returns>true if any direction buttons are down this frame</returns>
+        public static bool AreAnyDirectionButtonsDown()
+        {
+            if ((_current.DownButton == false) && (_current.LeftButton == false) && (_current.RightButton == false) &&
+                (_current.UpButton == false))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
 
         /// <summary>

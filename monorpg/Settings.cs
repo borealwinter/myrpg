@@ -54,5 +54,16 @@ namespace monorpg
             }
         }
 
+        /// <summary>
+        /// Returns default character screen position
+        /// </summary>
+        public static Vector2 DefaultPersonPosition
+        {
+            get
+            {
+                return new Vector2(304, 216);
+            }
+        }
+
     }
 }

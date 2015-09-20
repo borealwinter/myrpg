@@ -41,6 +41,10 @@ namespace monorpg
         /// Collision bounding box of object
         /// </summary>
         protected Rectangle _boundingBox;
+        /// <summary>
+        /// position of object on screen
+        /// </summary>
+        protected Vector2 _screenPosition;
 
         #endregion
 
@@ -60,6 +64,83 @@ namespace monorpg
             {
                 _position = value;
                 _boundingBox.X = (int)_position.X;
+                _boundingBox.Y = (int)_position.Y;
+            }
+        }
+
+        /// <summary>
+        /// Screen position of person
+        /// </summary>
+        public virtual Vector2 ScreenPosition
+        {
+            get
+            {
+                return _screenPosition;
+            }
+            set
+            {
+                _screenPosition = value;
+            }
+        }
+
+        /// <summary>
+        /// Screen position X
+        /// </summary>
+        public virtual float ScreenPositionX
+        {
+            get
+            {
+                return _screenPosition.X;
+            }
+            set
+            {
+                _screenPosition.X = value;
+            }
+        }
+
+        /// <summary>
+        /// position X
+        /// </summary>
+        public virtual float PositionX
+        {
+            get
+            {
+                return _position.X;
+            }
+            set
+            {
+                _position.X = value;
+                _boundingBox.X = (int)_position.X;
+            }
+        }
+
+        /// <summary>
+        /// Screen position Y
+        /// </summary>
+        public virtual float ScreenPositionY
+        {
+            get
+            {
+                return _screenPosition.Y;
+            }
+            set
+            {
+                _screenPosition.Y = value;
+            }
+        }
+
+        /// <summary>
+        /// position Y
+        /// </summary>
+        public virtual float PositionY
+        {
+            get
+            {
+                return _position.Y;
+            }
+            set
+            {
+                _position.Y = value; 
                 _boundingBox.Y = (int)_position.Y;
             }
         }
