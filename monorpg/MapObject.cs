@@ -198,6 +198,40 @@ namespace monorpg
             {
                 return _boundingBox;
             }
+            set
+            {
+                _boundingBox = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets width of bounding box of object
+        /// </summary>
+        public int BoundingBoxWidth
+        {
+            get
+            {
+                return _boundingBox.Width;
+            }
+            set
+            {
+                _boundingBox.Width = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets height of bounding box of object
+        /// </summary>
+        public int BoundingBoxHeight
+        {
+            get
+            {
+                return _boundingBox.Height;
+            }
+            set
+            {
+                _boundingBox.Height = value; 
+            }
         }
 
         #endregion
@@ -257,6 +291,42 @@ namespace monorpg
         /// Draw Cycle
         /// </summary>
         public abstract void Draw();
+
+        /// <summary>
+        /// Moves this object to the right of that other object
+        /// </summary>
+        /// <param name="that">The object to place this object to the right of</param>
+        public void MoveToTheRightOf(MapObject that)
+        {
+            this.PositionX = that.PositionX + that.BoundingBoxWidth;
+        }
+
+        /// <summary>
+        /// Moves this object to the left of that other object
+        /// </summary>
+        /// <param name="that">The object to place this object to the left of</param>
+        public void MoveToTheLeftOf(MapObject that)
+        {
+            this.PositionX = that.PositionX - this.BoundingBoxWidth;
+        }
+
+        /// <summary>
+        /// Moves this object to the top of that other object
+        /// </summary>
+        /// <param name="that">The object to place this object to the top of</param>
+        public void MoveToTheTopOf(MapObject that)
+        {
+            this.PositionY = that.PositionY - this.BoundingBoxHeight;
+        }
+
+        /// <summary>
+        /// Moves this object to the bottom of that other object
+        /// </summary>
+        /// <param name="that">The object to place this object to the bottom of</param>
+        public void MoveToTheBottomOf(MapObject that)
+        {
+            this.PositionY = that.PositionY + that.BoundingBoxHeight;
+        }
 
         #endregion
 

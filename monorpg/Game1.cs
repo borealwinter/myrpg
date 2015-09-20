@@ -28,6 +28,7 @@ namespace monorpg
             graphics.PreferredBackBufferHeight = 480;
             graphics.PreferredBackBufferWidth = 640;
             Content.RootDirectory = "Content";
+            System.Runtime.GCSettings.LatencyMode = System.Runtime.GCLatencyMode.LowLatency;
         }
 
         /// <summary>
@@ -42,6 +43,7 @@ namespace monorpg
 
             Settings.ContentFolder = Content.RootDirectory;
             Settings.Content = Content;
+            Settings.GraphicsDeviceManager = graphics;
 
             base.Initialize();
         }

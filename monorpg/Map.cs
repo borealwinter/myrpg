@@ -17,6 +17,12 @@ namespace monorpg
     /// </summary>
     public static class Map
     {
+        #region Constants
+
+        private const string _BarrierObjects = "objectlayer";
+
+        #endregion
+
         #region Fields
 
         private static TmxMap _map;
@@ -27,16 +33,36 @@ namespace monorpg
         private static int _numLayers;
         private static int _numBackgroundLayers;
         private static int _numForegroundLayers;
-        private static List<TmxObjectGroup> _objectGroups;
+
+        private static List<TmxObjectGroup> _objectGroups;   // move into the load method?
+
+        private static List<MapObject> _objects;
         private static Vector2 _offset;
 
         private static Avatar player;
         private static SpriteFont font;
+        private static List<Texture2D> visibleBoundaries;
+        private static bool showBoundaries = true;
 
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Collection of interactive objects on map
+        /// </summary>
+        public static List<MapObject> Objects
+        {
+            get
+            {
+                return _objects;
+            }
+            set
+            {
+                _objects = value;
+            }
+        }
 
         /// <summary>
         /// Is the map larger than a screen-sized map?
@@ -269,6 +295,7 @@ namespace monorpg
             _tiles.Clear();
             _tiles = null;
             Settings.Content.Unload();
+            GC.Collect();
         }
 
         /// <summary>
@@ -311,6 +338,15 @@ namespace monorpg
                     {
                         player.PositionY = 0f;
                         player.State = PersonState.Standing;
+                    }
+
+                    foreach (MapObject obj in _objects)
+                    {
+                        if (player.Collision(obj))
+                        {
+                            player.MoveToTheBottomOf(obj);
+                            player.State = PersonState.Standing;
+                        }
                     }
 
                     if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
@@ -357,6 +393,15 @@ namespace monorpg
                         player.State = PersonState.Standing;
                     }
 
+                    foreach (MapObject obj in _objects)
+                    {
+                        if (player.Collision(obj))
+                        {
+                            player.MoveToTheTopOf(obj);
+                            player.State = PersonState.Standing;
+                        }
+                    }
+
                     if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
                     {
                         verticalScrolling = false;
@@ -394,10 +439,20 @@ namespace monorpg
                 else
                 {
                     player.PositionX -= 5;
+
                     if (player.PositionX < 0f)
                     {
                         player.PositionX = 0f;
                         player.State = PersonState.Standing;
+                    }
+
+                    foreach (MapObject obj in _objects)
+                    {
+                        if (player.Collision(obj))
+                        {
+                            player.MoveToTheRightOf(obj);
+                            player.State = PersonState.Standing;
+                        }
                     }
 
                     if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
@@ -444,6 +499,15 @@ namespace monorpg
                         player.State = PersonState.Standing;
                     }
 
+                    foreach (MapObject obj in _objects)
+                    {
+                        if (player.Collision(obj))
+                        {
+                            player.MoveToTheLeftOf(obj);
+                            player.State = PersonState.Standing;
+                        }
+                    }
+
                     if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
                     {
                         horizontalScrolling = false;
@@ -472,6 +536,9 @@ namespace monorpg
                     }
                 }
             }
+
+            player.BoundingBoxHeight = 47;
+            player.BoundingBoxWidth = 31;
 
             // TODO: Add your update logic here
             player.Update();
@@ -513,6 +580,40 @@ namespace monorpg
             _objectGroups = (from TmxObjectGroup objectGroup in _map.ObjectGroups
                              select objectGroup).ToList();
 
+            _objects = new List<MapObject>();
+
+            //_objects.Add(new Boundary(32, 96, (int)obj.Height, (int)obj.Height));
+            
+            foreach (TmxObjectGroup objectGroup in _objectGroups)
+            {
+                if (objectGroup.Name == _BarrierObjects)
+                {
+                    foreach (TmxObject obj in objectGroup.Objects)
+                    {
+                        _objects.Add(new Boundary((float)obj.X, (float)obj.Y, (int)obj.Width, (int)obj.Height));
+
+                        if (showBoundaries)
+                        {
+                            if (visibleBoundaries == null)
+                            {
+                                visibleBoundaries = new List<Texture2D>();
+                            }
+                            visibleBoundaries.Add(Settings.CreateTexture(
+                                new Rectangle((int)obj.X, (int)obj.Y, (int)obj.Width, (int)obj.Height),
+                                new Color(1f, 0f, 0f, 0.5f)));
+                        }
+                    }
+                }
+            }
+
+            //foreach (TmxObject obj in objects)
+            //{
+            //    if (obj.Name.Contains("Barrier"))
+            //    {
+            //        _objects.Add(new Boundary((float)obj.X, (float)obj.Y, (int)obj.Height, (int)obj.Height));
+            //    }
+            //}
+
             IsScrollable = (_map.Width > 20 || _map.Height > 15) ? true : false;
 
             _offset = new Vector2(0f, 0f);
@@ -522,11 +623,10 @@ namespace monorpg
             player.State = PersonState.Walking;
             player.Speed = 10;
             player.Tint = Color.White;
-            player.Position = new Vector2(75, 75);
-            player.ScreenPosition = new Vector2(75, 75);
+            player.Position = new Vector2(125, 125);
+            player.ScreenPosition = new Vector2(125, 125);
+            //_objects.Add(player);
             font = Settings.Content.Load<SpriteFont>("ExFont");
-
-
         }
 
         /// <summary>
@@ -608,11 +708,26 @@ namespace monorpg
 
                 DrawForegroundLayers();
 
+                if (showBoundaries)
+                {
+                    DrawBoundaries();
+                }
+
                 Settings.SpriteBatch.DrawString(font,
-                    String.Concat("X: ",player.PositionX,"  Y: ",player.PositionY,"  SX: ",player.ScreenPositionX,"  SY: ",player.ScreenPositionY),
+                    String.Concat("X: ", player.PositionX, "  Y: ", player.PositionY, "  SX: ", player.ScreenPositionX, "  SY: ", player.ScreenPositionY),
                     Vector2.Zero, Color.White);
             }
-            
+        }
+
+        /// <summary>
+        /// Makes all boundaries visible on map
+        /// </summary>
+        public static void DrawBoundaries()
+        {
+            for (int i = 0; i < _objects.Count; i++)
+            {
+                Settings.SpriteBatch.Draw(visibleBoundaries[i], new Vector2(_objects[i].BoundingBox.X - Map.OffsetX, _objects[i].BoundingBox.Y - Map.OffsetY), Color.White);
+            }
         }
 
         #endregion
