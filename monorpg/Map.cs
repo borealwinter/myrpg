@@ -30,6 +30,10 @@ namespace monorpg
         private static List<TmxObjectGroup> _objectGroups;
         private static Vector2 _offset;
 
+        private static Avatar player;
+        private static SpriteFont font;
+
+
         #endregion
 
         #region Properties
@@ -267,9 +271,211 @@ namespace monorpg
             Settings.Content.Unload();
         }
 
+        /// <summary>
+        /// Updates Map
+        /// </summary>
         public static void Update()
-        { 
-        
+        {
+            UpdateNormal();
+        }
+
+        /// <summary>
+        /// Runs the normal update when no events are happening.  
+        /// </summary>
+        public static void UpdateNormal()
+        {
+            if (!Input.AreAnyDirectionButtonsDown())
+            {
+                player.State = PersonState.Standing;
+            }
+            else
+            {
+                player.State = PersonState.Walking;
+            }
+
+            Vector2 lastPlayer = new Vector2(player.PositionX, player.PositionY);
+            Vector2 lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
+            bool verticalScrolling;
+            bool horizontalScrolling;
+
+            if (Input.Up)
+            {
+                if (player.Direction != Facing.North)
+                {
+                    player.Direction = Facing.North;
+                }
+                else
+                {
+                    player.PositionY -= 5;
+                    if (player.PositionY < 0f)
+                    {
+                        player.PositionY = 0f;
+                        player.State = PersonState.Standing;
+                    }
+
+                    if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
+                    {
+                        verticalScrolling = false;
+                    }
+                    else
+                    {
+                        verticalScrolling = true;
+                    }
+
+                    if (verticalScrolling)
+                    {
+                        Map.OffsetY += player.PositionY - lastPlayer.Y;
+                    }
+                    else
+                    {
+                        player.ScreenPositionY += player.PositionY - lastPlayer.Y;
+
+                        if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                        {
+                            Map.OffsetY = 0f;
+                        }
+                        else
+                        {
+                            Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                        }
+                    }
+                }
+            }
+            else if (Input.Down)
+            {
+                if (player.Direction != Facing.South)
+                {
+                    player.Direction = Facing.South;
+                }
+                else
+                {
+                    player.PositionY += 5;
+
+                    if (player.PositionY > Map.Height)
+                    {
+                        player.PositionY = Map.Height;
+                        player.State = PersonState.Standing;
+                    }
+
+                    if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
+                    {
+                        verticalScrolling = false;
+                    }
+                    else
+                    {
+                        verticalScrolling = true;
+                    }
+
+                    if (verticalScrolling)
+                    {
+                        Map.OffsetY += player.PositionY - lastPlayer.Y;
+                    }
+                    else
+                    {
+                        player.ScreenPositionY += player.PositionY - lastPlayer.Y;
+
+                        if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                        {
+                            Map.OffsetY = 0f;
+                        }
+                        else
+                        {
+                            Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                        }
+                    }
+                }
+            }
+            else if (Input.Left)
+            {
+                if (player.Direction != Facing.West)
+                {
+                    player.Direction = Facing.West;
+                }
+                else
+                {
+                    player.PositionX -= 5;
+                    if (player.PositionX < 0f)
+                    {
+                        player.PositionX = 0f;
+                        player.State = PersonState.Standing;
+                    }
+
+                    if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
+                    {
+                        horizontalScrolling = false;
+                    }
+                    else
+                    {
+                        horizontalScrolling = true;
+                    }
+
+                    if (horizontalScrolling)
+                    {
+                        Map.OffsetX += player.PositionX - lastPlayer.X;
+                    }
+                    else
+                    {
+                        player.ScreenPositionX += player.PositionX - lastPlayer.X;
+
+                        if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                        {
+                            Map.OffsetX = 0f;
+                        }
+                        else
+                        {
+                            Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                        }
+                    }
+                }
+            }
+            else if (Input.Right)
+            {
+                if (player.Direction != Facing.East)
+                {
+                    player.Direction = Facing.East;
+                }
+                else
+                {
+                    player.PositionX += 5;
+
+                    if (player.PositionX > Map.Width)
+                    {
+                        player.PositionX = Map.Width;
+                        player.State = PersonState.Standing;
+                    }
+
+                    if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
+                    {
+                        horizontalScrolling = false;
+                    }
+                    else
+                    {
+                        horizontalScrolling = true;
+                    }
+
+                    if (horizontalScrolling)
+                    {
+                        Map.OffsetX += player.PositionX - lastPlayer.X;
+                    }
+                    else
+                    {
+                        player.ScreenPositionX += player.PositionX - lastPlayer.X;
+
+                        if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                        {
+                            Map.OffsetX = 0f;
+                        }
+                        else
+                        {
+                            Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                        }
+                    }
+                }
+            }
+
+            // TODO: Add your update logic here
+            player.Update();
+
         }
 
         /// <summary>
@@ -310,6 +516,17 @@ namespace monorpg
             IsScrollable = (_map.Width > 20 || _map.Height > 15) ? true : false;
 
             _offset = new Vector2(0f, 0f);
+
+            player = new Avatar();
+            player.Direction = Facing.East;
+            player.State = PersonState.Walking;
+            player.Speed = 10;
+            player.Tint = Color.White;
+            player.Position = new Vector2(75, 75);
+            player.ScreenPosition = new Vector2(75, 75);
+            font = Settings.Content.Load<SpriteFont>("ExFont");
+
+
         }
 
         /// <summary>
@@ -386,10 +603,16 @@ namespace monorpg
             if (IsMapLoaded)
             {
                 DrawBackgroundLayers();
-                //ToDo: Print Object Layer
+
+                player.Draw(player.ScreenPosition);
+
                 DrawForegroundLayers();
+
+                Settings.SpriteBatch.DrawString(font,
+                    String.Concat("X: ",player.PositionX,"  Y: ",player.PositionY,"  SX: ",player.ScreenPositionX,"  SY: ",player.ScreenPositionY),
+                    Vector2.Zero, Color.White);
             }
-            // ToDo: Print any textboxes
+            
         }
 
         #endregion
