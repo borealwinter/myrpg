@@ -267,6 +267,11 @@ namespace monorpg
             Settings.Content.Unload();
         }
 
+        public static void Update()
+        { 
+        
+        }
+
         /// <summary>
         /// Loads the tmx file
         /// </summary>
@@ -308,6 +313,72 @@ namespace monorpg
         }
 
         /// <summary>
+        /// Draws the foreground layers of the map
+        /// </summary>
+        public static void DrawForegroundLayers()
+        {
+            int k = 0;
+            foreach (var layer in _map.Layers)
+            {
+                if (layer.Name.ToLower().Contains("foreground"))
+                {
+                    for (int j = 0; j < _map.Height; j++)
+                    {
+                        for (int i = 0; i < _map.Width; i++)
+                        {
+                            int gid = layer.Tiles[k].Gid;
+                            if (gid > 0)
+                            {
+                                int xDraw = ((i * 32)) - (int)_offset.X;
+                                int yDraw = ((j * 32)) - (int)_offset.Y;
+
+                                if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+                                {
+                                    Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                }
+                            }
+                            k++;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Draws the foreground layers of the map
+        /// </summary>
+        public static void DrawBackgroundLayers()
+        {
+            int k = 0;
+            foreach (var layer in _map.Layers)
+            {
+                if (layer.Name.ToLower().Contains("background"))
+                {
+                    for (int j = 0; j < _map.Height; j++)
+                    {
+                        for (int i = 0; i < _map.Width; i++)
+                        {
+                            int gid = layer.Tiles[k].Gid;
+                            if (gid > 0)
+                            {
+                                int xDraw = ((i * 32)) - (int)_offset.X;
+                                int yDraw = ((j * 32)) - (int)_offset.Y;
+
+                                if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+                                {
+                                    Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                }
+                            }
+                            k++;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Draw whole map to screen.  
         /// This one is optimized for screen sized or smaller maps
         /// </summary>
@@ -318,58 +389,9 @@ namespace monorpg
             // Wait until map is loaded to prevent null reference error
             if (IsMapLoaded)
             {
-                foreach (var layer in _map.Layers)
-                {
-                    if (layer.Name.ToLower().Contains("background"))
-                    {
-                        for (int j = 0; j < _map.Height; j++)
-                        {
-                            for (int i = 0; i < _map.Width; i++)
-                            {
-                                int gid = layer.Tiles[k].Gid;
-                                if (gid > 0)
-                                {
-                                    int xDraw = ((i * 32)) - (int)_offset.X;
-                                    int yDraw = ((j * 32)) - (int)_offset.Y;
-
-                                    if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
-                                    {
-                                        Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
-                                    }
-                                }
-                                k++;
-                            }
-                        }
-                    }
-                }
-
+                DrawBackgroundLayers();
                 //ToDo: Print Object Layer
-
-                k = 0;
-                foreach (var layer in _map.Layers)
-                {
-                    if (layer.Name.ToLower().Contains("foreground"))
-                    {
-                        for (int j = 0; j < _map.Height; j++)
-                        {
-                            for (int i = 0; i < _map.Width; i++)
-                            {
-                                int gid = layer.Tiles[k].Gid;
-                                if (gid > 0)
-                                {
-                                    int xDraw = ((i * 32)) - (int)_offset.X;
-                                    int yDraw = ((j * 32)) - (int)_offset.Y;
-
-                                    if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
-                                    {
-                                        Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
-                                    }
-                                }
-                                k++;
-                            }
-                        }
-                    }
-                }
+                DrawForegroundLayers();
             }
             // ToDo: Print any textboxes
         }
