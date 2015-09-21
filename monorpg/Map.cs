@@ -545,7 +545,7 @@ namespace monorpg
                 }
             }
 
-            player.BoundingBoxHeight = 47;
+            player.BoundingBoxHeight = 22;
             player.BoundingBoxWidth = 31;
 
             // TODO: Add your update logic here
@@ -612,14 +612,6 @@ namespace monorpg
                 }
             }
 
-            //foreach (TmxObject obj in objects)
-            //{
-            //    if (obj.Name.Contains("Barrier"))
-            //    {
-            //        _objects.Add(new Boundary((float)obj.X, (float)obj.Y, (int)obj.Height, (int)obj.Height));
-            //    }
-            //}
-
             IsScrollable = (_map.Width > 20 || _map.Height > 15) ? true : false;
 
             _offset = new Vector2(0f, 0f);
@@ -629,8 +621,8 @@ namespace monorpg
             player.State = PersonState.Walking;
             player.Speed = 10;
             player.Tint = Color.White;
-            player.Position = new Vector2(125, 125);
-            player.ScreenPosition = new Vector2(125, 125);
+            player.Position = new Vector2(600, 600);
+            //player.ScreenPosition = new Vector2(125, 125);
             //_objects.Add(player);
             font = Settings.Content.Load<SpriteFont>("ExFont");
         }
@@ -710,7 +702,8 @@ namespace monorpg
             {
                 DrawBackgroundLayers();
 
-                player.Draw(player.ScreenPosition);
+                Vector2 pos = new Vector2(player.ScreenPositionX, player.ScreenPositionY - 25f);
+                player.Draw(pos);
 
                 DrawForegroundLayers();
 
