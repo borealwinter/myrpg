@@ -33,6 +33,10 @@ namespace monorpg
         private static int _numLayers;
         private static int _numBackgroundLayers;
         private static int _numForegroundLayers;
+        private static bool verticalScrolling;
+        private static bool horizontalScrolling;
+        private static Vector2 lastPlayer;
+        private static Vector2 lastOffset;
 
         private static List<TmxObjectGroup> _objectGroups;   // move into the load method?
 
@@ -299,6 +303,77 @@ namespace monorpg
         }
 
         /// <summary>
+        /// Updates map drawing coordinated centered around player vertically
+        /// </summary>
+        public static void UpdateVertical()
+        {
+            if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
+            {
+                verticalScrolling = false;
+            }
+            else
+            {
+                verticalScrolling = true;
+            }
+
+            if (verticalScrolling)
+            {
+                player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
+                Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
+            }
+            else
+            {
+                player.ScreenPositionY += player.PositionY - lastPlayer.Y;
+
+                if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                {
+                    Map.OffsetY = 0f;
+                    player.ScreenPositionY = player.PositionY;
+                }
+                else
+                {
+                    Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates map drawing coordinated centered around player horizontally
+        /// </summary>
+        public static void UpdateHorizontal()
+        {
+            if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
+            {
+                horizontalScrolling = false;
+            }
+            else
+            {
+                horizontalScrolling = true;
+            }
+
+            if (horizontalScrolling)
+            {
+                player.ScreenPositionX = Settings.DefaultPersonPosition.X;
+                Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
+            }
+            else
+            {
+                player.ScreenPositionX += player.PositionX - lastPlayer.X;
+
+                if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                {
+                    Map.OffsetX = 0f;
+                    player.ScreenPositionX = player.PositionX;
+                }
+                else
+                {
+                    Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Updates Map
         /// </summary>
         public static void Update()
@@ -311,71 +386,14 @@ namespace monorpg
         /// </summary>
         public static void UpdateNormal()
         {
-            Vector2 lastPlayer = new Vector2(player.PositionX, player.PositionY);
-            Vector2 lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
-            bool verticalScrolling;
-            bool horizontalScrolling;
+            lastPlayer = new Vector2(player.PositionX, player.PositionY);
+            lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
 
             if (!Input.AreAnyDirectionButtonsDown())
             {
                 player.State = PersonState.Standing;
-                if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
-                {
-                    verticalScrolling = false;
-                }
-                else
-                {
-                    verticalScrolling = true;
-                }
-
-                if (verticalScrolling)
-                {
-                    player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
-                    Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
-                }
-                else
-                {
-                    player.ScreenPositionY += player.PositionY - lastPlayer.Y;
-
-                    if (player.PositionY <= Settings.DefaultPersonPosition.Y)
-                    {
-                        Map.OffsetY = 0f;
-                        player.ScreenPositionY = player.PositionY;
-                    }
-                    else
-                    {
-                        Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
-                    }
-                }
-                if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
-                {
-                    horizontalScrolling = false;
-                }
-                else
-                {
-                    horizontalScrolling = true;
-                }
-
-                if (horizontalScrolling)
-                {
-                    player.ScreenPositionX = Settings.DefaultPersonPosition.X;
-                    Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
-                }
-                else
-                {
-                    player.ScreenPositionX += player.PositionX - lastPlayer.X;
-
-                    if (player.PositionX <= Settings.DefaultPersonPosition.X)
-                    {
-                        Map.OffsetX = 0f;
-                        player.ScreenPositionX = player.PositionX;
-                    }
-                    else
-                    {
-                        Map.OffsetX = Map.Width - Settings.ScreenSize.X;
-                    }
-                }
-
+                UpdateVertical();
+                UpdateHorizontal();
             }
             else
             {
@@ -406,34 +424,7 @@ namespace monorpg
                         }
                     }
 
-                    if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
-                    {
-                        verticalScrolling = false;
-                    }
-                    else
-                    {
-                        verticalScrolling = true;
-                    }
-
-                    if (verticalScrolling)
-                    {
-                        player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
-                        Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
-                    }
-                    else
-                    {
-                        player.ScreenPositionY += player.PositionY - lastPlayer.Y;
-
-                        if (player.PositionY <= Settings.DefaultPersonPosition.Y)
-                        {
-                            Map.OffsetY = 0f;
-                            player.ScreenPositionY = player.PositionY;
-                        }
-                        else
-                        {
-                            Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
-                        }
-                    }
+                    UpdateVertical();
                 }
             }
             else if (Input.Down)
@@ -461,34 +452,7 @@ namespace monorpg
                         }
                     }
 
-                    if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
-                    {
-                        verticalScrolling = false;
-                    }
-                    else
-                    {
-                        verticalScrolling = true;
-                    }
-
-                    if (verticalScrolling)
-                    {
-                        player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
-                        Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
-                    }
-                    else
-                    {
-                        player.ScreenPositionY += player.PositionY - lastPlayer.Y;
-
-                        if (player.PositionY <= Settings.DefaultPersonPosition.Y)
-                        {
-                            Map.OffsetY = 0f;
-                            player.ScreenPositionY = player.PositionY;
-                        }
-                        else
-                        {
-                            Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
-                        }
-                    }
+                    UpdateVertical();
                 }
             }
             else if (Input.Left)
@@ -516,34 +480,7 @@ namespace monorpg
                         }
                     }
 
-                    if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
-                    {
-                        horizontalScrolling = false;
-                    }
-                    else
-                    {
-                        horizontalScrolling = true;
-                    }
-
-                    if (horizontalScrolling)
-                    {
-                        player.ScreenPositionX = Settings.DefaultPersonPosition.X;
-                        Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
-                    }
-                    else
-                    {
-                        player.ScreenPositionX += player.PositionX - lastPlayer.X;
-
-                        if (player.PositionX <= Settings.DefaultPersonPosition.X)
-                        {
-                            Map.OffsetX = 0f;
-                            player.ScreenPositionX = player.PositionX;
-                        }
-                        else
-                        {
-                            Map.OffsetX = Map.Width - Settings.ScreenSize.X;
-                        }
-                    }
+                    UpdateHorizontal();
                 }
             }
             else if (Input.Right)
@@ -571,34 +508,7 @@ namespace monorpg
                         }
                     }
 
-                    if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
-                    {
-                        horizontalScrolling = false;
-                    }
-                    else
-                    {
-                        horizontalScrolling = true;
-                    }
-
-                    if (horizontalScrolling)
-                    {
-                        player.ScreenPositionX = Settings.DefaultPersonPosition.X;
-                        Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
-                    }
-                    else
-                    {
-                        player.ScreenPositionX += player.PositionX - lastPlayer.X;
-
-                        if (player.PositionX <= Settings.DefaultPersonPosition.X)
-                        {
-                            Map.OffsetX = 0f;
-                            player.ScreenPositionX = player.PositionX;
-                        }
-                        else
-                        {
-                            Map.OffsetX = Map.Width - Settings.ScreenSize.X;
-                        }
-                    }
+                    UpdateHorizontal();
                 }
             }
 
