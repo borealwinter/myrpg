@@ -16,7 +16,7 @@ namespace monorpg
     /// <summary>
     /// Player
     /// </summary>
-    public class Avatar : Person
+    public sealed class Avatar : Person
     {
         #region Constructor
 
