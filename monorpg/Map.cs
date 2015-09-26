@@ -311,19 +311,76 @@ namespace monorpg
         /// </summary>
         public static void UpdateNormal()
         {
+            Vector2 lastPlayer = new Vector2(player.PositionX, player.PositionY);
+            Vector2 lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
+            bool verticalScrolling;
+            bool horizontalScrolling;
+
             if (!Input.AreAnyDirectionButtonsDown())
             {
                 player.State = PersonState.Standing;
+                if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
+                {
+                    verticalScrolling = false;
+                }
+                else
+                {
+                    verticalScrolling = true;
+                }
+
+                if (verticalScrolling)
+                {
+                    player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
+                    Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
+                }
+                else
+                {
+                    player.ScreenPositionY += player.PositionY - lastPlayer.Y;
+
+                    if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                    {
+                        Map.OffsetY = 0f;
+                        player.ScreenPositionY = player.PositionY;
+                    }
+                    else
+                    {
+                        Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                    }
+                }
+                if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
+                {
+                    horizontalScrolling = false;
+                }
+                else
+                {
+                    horizontalScrolling = true;
+                }
+
+                if (horizontalScrolling)
+                {
+                    player.ScreenPositionX = Settings.DefaultPersonPosition.X;
+                    Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
+                }
+                else
+                {
+                    player.ScreenPositionX += player.PositionX - lastPlayer.X;
+
+                    if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                    {
+                        Map.OffsetX = 0f;
+                        player.ScreenPositionX = player.PositionX;
+                    }
+                    else
+                    {
+                        Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                    }
+                }
+
             }
             else
             {
                 player.State = PersonState.Walking;
             }
-
-            Vector2 lastPlayer = new Vector2(player.PositionX, player.PositionY);
-            Vector2 lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
-            bool verticalScrolling;
-            bool horizontalScrolling;
 
             if (Input.Up)
             {

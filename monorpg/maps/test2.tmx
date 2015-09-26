@@ -23,7 +23,6 @@
   <object id="12" x="321" y="93" width="586.5" height="32"/>
   <object id="13" x="29" y="94" width="286.5" height="32"/>
   <object id="14" x="1.5" y="128" width="25.5" height="1249"/>
-  <object id="15" x="405.333" y="402.667" width="121.333" height="81.3333"/>
  </objectgroup>
  <layer name="foreground1" width="60" height="45" visible="0">
   <data encoding="base64" compression="zlib">
