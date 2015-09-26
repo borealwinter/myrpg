@@ -46,6 +46,11 @@ namespace monorpg
         /// </summary>
         protected Vector2 _screenPosition;
 
+        /// <summary>
+        /// Gets whether player bounds is within 2 pixels of this object's bounds.
+        /// </summary>
+        protected bool _nextToPlayer;
+
         #endregion
 
         #region Properties
@@ -140,7 +145,7 @@ namespace monorpg
             }
             set
             {
-                _position.Y = value; 
+                _position.Y = value;
                 _boundingBox.Y = (int)_position.Y;
             }
         }
@@ -230,7 +235,7 @@ namespace monorpg
             }
             set
             {
-                _boundingBox.Height = value; 
+                _boundingBox.Height = value;
             }
         }
 
@@ -280,6 +285,23 @@ namespace monorpg
         public bool Collision(MapObject other)
         {
             return this._boundingBox.Intersects(other.BoundingBox);
+        }
+
+        /// <summary>
+        /// True if player is next to this object
+        /// </summary>
+        /// <param name="player">player</param>
+        /// <returns>true if player is within 2 pixels of this object</returns>
+        public bool IsNextToPlayer(Avatar player)
+        {
+            Rectangle r = new Rectangle((int)this.PositionX - 2,
+                (int)this.PositionY - 2,
+                this.BoundingBoxWidth + 4,
+                this.BoundingBoxHeight + 4);
+
+            _nextToPlayer = r.Intersects(player.BoundingBox);
+
+            return _nextToPlayer;
         }
 
         /// <summary>
