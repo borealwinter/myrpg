@@ -251,121 +251,247 @@ namespace monorpg
         /// </summary>
         public override void Update()
         {
-
-            //10x17 for top left 37x63 for bottom left
-            if (State == PersonState.Standing)
+            if (this is Avatar)
             {
-                switch (_direction)
+                BoundingBoxHeight = 22;
+                BoundingBoxWidth = 31;
+
+                //10x17 for top left 37x63 for bottom left
+                if (State == PersonState.Standing)
                 {
-                    case Facing.East:
-                        _sourceRect = new Rectangle(56, 82, 27, 45);
-                        break;
-                    case Facing.North:
-                        _sourceRect = new Rectangle(56, 16, 31, 47);
-                        break;
-                    case Facing.South:
-                        _sourceRect = new Rectangle(56, 144, 31, 47);
-                        break;
-                    case Facing.West:
-                        _sourceRect = new Rectangle(56, 210, 27, 45);
-                        break;
+                    switch (_direction)
+                    {
+                        case Facing.East:
+                            _sourceRect = new Rectangle(56, 82, 27, 45);
+                            break;
+                        case Facing.North:
+                            _sourceRect = new Rectangle(56, 16, 31, 47);
+                            break;
+                        case Facing.South:
+                            _sourceRect = new Rectangle(56, 144, 31, 47);
+                            break;
+                        case Facing.West:
+                            _sourceRect = new Rectangle(56, 210, 27, 45);
+                            break;
+                    }
+                }
+                else
+                {
+                    if (Iterator == 0)
+                    {
+                        Iterator = Speed;
+                        if (Frame < 0)
+                        {
+                            Frame = 3;
+                        }
+                        switch (_direction)
+                        {
+                            case Facing.East:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(56, 82, 27, 45);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(104, 82, 27, 45);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(56, 82, 27, 45);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(8, 82, 27, 45);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.North:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(56, 16, 27, 45);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(104, 16, 27, 45);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(56, 16, 27, 45);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(8, 16, 27, 45);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.South:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(56, 144, 27, 45);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(104, 144, 27, 45);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(56, 144, 27, 45);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(8, 144, 27, 45);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.West:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(56, 210, 27, 45);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(104, 210, 27, 45);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(56, 210, 27, 45);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(8, 210, 27, 45);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                        }
+                        Frame--;
+                    }
+                    Iterator--;
                 }
             }
             else
             {
-                if (Iterator == 0)
+                //Not Avatar
+                BoundingBoxHeight = 32;
+                BoundingBoxWidth = 32;
+
+                if (State == PersonState.Standing)
                 {
-                    Iterator = Speed;
-                    if (Frame < 0)
-                    {
-                        Frame = 3;
-                    }
                     switch (_direction)
                     {
                         case Facing.East:
-                            switch (_frame)
-                            {
-                                case 0:
-                                    _sourceRect = new Rectangle(56, 82, 27, 45);
-                                    break;
-                                case 1:
-                                    _sourceRect = new Rectangle(104, 82, 27, 45);
-                                    break;
-                                case 2:
-                                    _sourceRect = new Rectangle(56, 82, 27, 45);
-                                    break;
-                                case 3:
-                                    _sourceRect = new Rectangle(8, 82, 27, 45);
-                                    break;
-                                default:
-
-                                    break;
-                            }
+                            _sourceRect = new Rectangle(48, 64, 48, 64);
                             break;
                         case Facing.North:
-                            switch (_frame)
-                            {
-                                case 0:
-                                    _sourceRect = new Rectangle(56, 16, 27, 45);
-                                    break;
-                                case 1:
-                                    _sourceRect = new Rectangle(104, 16, 27, 45);
-                                    break;
-                                case 2:
-                                    _sourceRect = new Rectangle(56, 16, 27, 45);
-                                    break;
-                                case 3:
-                                    _sourceRect = new Rectangle(8, 16, 27, 45);
-                                    break;
-                                default:
-
-                                    break;
-                            }
+                            _sourceRect = new Rectangle(48, 0, 48, 64);
                             break;
                         case Facing.South:
-                            switch (_frame)
-                            {
-                                case 0:
-                                    _sourceRect = new Rectangle(56, 144, 27, 45);
-                                    break;
-                                case 1:
-                                    _sourceRect = new Rectangle(104, 144, 27, 45);
-                                    break;
-                                case 2:
-                                    _sourceRect = new Rectangle(56, 144, 27, 45);
-                                    break;
-                                case 3:
-                                    _sourceRect = new Rectangle(8, 144, 27, 45);
-                                    break;
-                                default:
-
-                                    break;
-                            }
+                            _sourceRect = new Rectangle(48, 128, 48, 64);
                             break;
                         case Facing.West:
-                            switch (_frame)
-                            {
-                                case 0:
-                                    _sourceRect = new Rectangle(56, 210, 27, 45);
-                                    break;
-                                case 1:
-                                    _sourceRect = new Rectangle(104, 210, 27, 45);
-                                    break;
-                                case 2:
-                                    _sourceRect = new Rectangle(56, 210, 27, 45);
-                                    break;
-                                case 3:
-                                    _sourceRect = new Rectangle(8, 210, 27, 45);
-                                    break;
-                                default:
-
-                                    break;
-                            }
+                            _sourceRect = new Rectangle(48, 192, 48, 64);
                             break;
                     }
-                    Frame--;
                 }
-                Iterator--; 
+                else
+                {
+                    if (Iterator == 0)
+                    {
+                        Iterator = Speed;
+                        if (Frame < 0)
+                        {
+                            Frame = 3;
+                        }
+                        switch (_direction)
+                        {
+                            case Facing.East:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(48, 82, 48, 64);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(96, 82, 48, 64);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(48, 82, 48, 64);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(0, 82, 48, 64);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.North:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(48, 16, 48, 64);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(96, 16, 48, 64);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(48, 16, 48, 64);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(0, 16, 48, 64);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.South:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(48, 144, 48, 64);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(96, 144, 48, 64);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(48, 144, 48, 64);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(0, 144, 48, 64);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                            case Facing.West:
+                                switch (_frame)
+                                {
+                                    case 0:
+                                        _sourceRect = new Rectangle(48, 210, 48, 64);
+                                        break;
+                                    case 1:
+                                        _sourceRect = new Rectangle(96, 210, 48, 64);
+                                        break;
+                                    case 2:
+                                        _sourceRect = new Rectangle(48, 210, 48, 64);
+                                        break;
+                                    case 3:
+                                        _sourceRect = new Rectangle(0, 210, 48, 64);
+                                        break;
+                                    default:
+
+                                        break;
+                                }
+                                break;
+                        }
+                        Frame--;
+                    }
+                    Iterator--;
+                }
             }
         }
 

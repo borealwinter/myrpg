@@ -51,9 +51,30 @@ namespace monorpg
         /// </summary>
         protected bool _nextToPlayer;
 
+        /// <summary>
+        /// Name of character
+        /// </summary>
+        protected string _name;
+
+
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Name of character
+        /// </summary>
+        public String Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
 
         /// <summary>
         /// Gets position vector for object

@@ -62,20 +62,20 @@ namespace monorpg
         }
 
         /// <summary>
-        /// Draws Player in Center position
+        /// Draws Player on screen position
         /// </summary>
         public override void Draw()
         {
-            Settings.SpriteBatch.Draw(_spriteSheet, Settings.DefaultPersonPosition, _sourceRect, _color);
+            Settings.SpriteBatch.Draw(_spriteSheet, this.ScreenPosition, _sourceRect, _color);
         }
 
         /// <summary>
         /// Draws Player at Coordinates
         /// </summary>
-        /// <param name="position"></param>
-        public void Draw(Vector2 position)
+        /// <param name="screenPosition"></param>
+        public void Draw(Vector2 screenPosition)
         {
-            Settings.SpriteBatch.Draw(_spriteSheet, position, _sourceRect, _color);
+            Settings.SpriteBatch.Draw(_spriteSheet, screenPosition, _sourceRect, _color);
         }
     }
 }

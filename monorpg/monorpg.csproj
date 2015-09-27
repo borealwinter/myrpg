@@ -67,6 +67,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapObject.cs" />
+    <Compile Include="NPCPerson.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

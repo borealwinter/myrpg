@@ -512,8 +512,8 @@ namespace monorpg
                 }
             }
 
-            player.BoundingBoxHeight = 22;
-            player.BoundingBoxWidth = 31;
+            //player.BoundingBoxHeight = 22;
+            //player.BoundingBoxWidth = 31;
 
             // TODO: Add your update logic here
             player.Update();
