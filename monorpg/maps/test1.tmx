@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="32" tileheight="32" nextobjectid="24">
  <tileset firstgid="1" name="GrittyFutureInside01" tilewidth="32" tileheight="32">
   <image source="../images/GrittyFutureInside01.png" width="960" height="512"/>
  </tileset>
@@ -611,4 +611,11 @@
    <tile gid="431"/>
   </data>
  </layer>
+ <objectgroup name="objectlayer">
+  <object id="1" x="32" y="97" width="575" height="26"/>
+  <object id="12" x="-1" y="121" width="31" height="348"/>
+  <object id="21" x="607" y="124" width="29" height="342"/>
+  <object id="22" x="30" y="420" width="351" height="54"/>
+  <object id="23" x="419" y="419" width="187" height="58"/>
+ </objectgroup>
 </map>

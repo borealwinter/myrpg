@@ -308,6 +308,50 @@ namespace monorpg
                         State = PersonState.Walking;
                         Counter0 = random.Next(32, 300);
                     }
+                    
+                    if (objects != null)
+                    {
+                        for (int i = 0; i < objects.Count; i++)
+                        {
+                            if (BoundingBox.Intersects(objects[i].BoundingBox))
+                            {
+                                switch (Direction)
+                                {
+                                    case Facing.North:
+                                        BoundingBoxHeight = (int)objects[i].PositionY + objects[i].BoundingBoxHeight;
+                                        break;
+                                    case Facing.South:
+                                        BoundingBoxHeight = (int)objects[i].PositionY - BoundingBoxHeight;
+                                        break;
+                                    case Facing.East:
+                                        BoundingBoxWidth = (int)objects[i].PositionX - BoundingBoxWidth;
+                                        break;
+                                    case Facing.West:
+                                        BoundingBoxHeight = (int)objects[i].PositionX + objects[i].BoundingBoxWidth;
+                                        break;
+                                }
+                                int dir = random.Next(4);
+                                switch (dir)
+                                {
+                                    case 0:
+                                        Direction = Facing.North;
+                                        break;
+                                    case 1:
+                                        Direction = Facing.South;
+                                        break;
+                                    case 2:
+                                        Direction = Facing.East;
+                                        break;
+                                    case 3:
+                                        Direction = Facing.West;
+                                        break;
+                                }
+
+                                State = PersonState.Walking;
+                                Counter0 = random.Next(32, 300);
+                            }
+                        }
+                    }
                 }
             }
         }

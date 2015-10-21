@@ -84,14 +84,23 @@ namespace monorpg
         /// <returns></returns>
         public static Texture2D CreateTexture(Rectangle size, Color color)
         {
-            Texture2D texture = new Texture2D(GraphicsDeviceManager.GraphicsDevice,size.Width,size.Height);
-            Color[] data = new Color[texture.Width * texture.Height];
-            texture.GetData(data);
-            for (int i = 0; i < data.Length; i++)
+            Texture2D texture;
+            try
             {
-                data[i] = color;
+                texture = new Texture2D(GraphicsDeviceManager.GraphicsDevice, size.Width, size.Height);
+                Color[] data = new Color[texture.Width * texture.Height];
+                texture.GetData(data);
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = color;
+                }
+                texture.SetData(data);
             }
-            texture.SetData(data);
+            catch(Exception ex)
+            {
+                texture = new Texture2D(GraphicsDeviceManager.GraphicsDevice, 0, 0);
+            }
+
             return texture;
         }
 

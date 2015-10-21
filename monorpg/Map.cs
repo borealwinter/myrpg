@@ -50,7 +50,7 @@ namespace monorpg
         private static SpriteFont font;
         private static List<Texture2D> visibleBoundaries;
         private static bool showBoundaries = false;
-
+        //private static bool showBoundaries = true;
 
         #endregion
 
@@ -538,7 +538,7 @@ namespace monorpg
             // TODO: Add your update logic here
             player.Update();
 
-            npc1.Update();
+            npc1.Update(_objects);
 
         }
 
@@ -614,14 +614,14 @@ namespace monorpg
             player.Speed = 10;
             player.Tint = Color.White;
             //player.Position = new Vector2(600, 600);
-            player.Position = new Vector2(75, 75);
+            player.Position = new Vector2(76, 200);
             //player.ScreenPosition = new Vector2(125, 125);
 
             npc1 = new NPCPerson("brunette00");
             npc1.Direction = Facing.South;
             npc1.State = PersonState.Standing;
             npc1.Tint = Color.White;
-            npc1.Position = new Vector2(500, 500);
+            npc1.Position = new Vector2(400, 200);
             npc1.Speed = 9;
             npc1.MoveScript = 1;
             //_objects.Add(player);
