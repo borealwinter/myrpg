@@ -260,7 +260,9 @@ namespace monorpg
             }
         }
 
-
+        /// <summary>
+        /// Has the object collided with another object
+        /// </summary>
         public bool RanIntoSomething { get; set; }
 
         #endregion

@@ -716,8 +716,8 @@ namespace monorpg
             //        }
             //    }
             //}
-            try
-            {
+            //try
+            //{
                 int k = 0;
                 foreach (var layer in _map.Layers)
                 {
@@ -744,11 +744,11 @@ namespace monorpg
                     }
                 }
 
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
 
-            }
+            //}
 
         }
 
