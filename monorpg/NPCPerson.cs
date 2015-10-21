@@ -165,14 +165,25 @@ namespace monorpg
         #region Methods
 
         /// <summary>
+        /// Dummy update for now
+        /// </summary>
+        public override void Update() { }
+
+        /// <summary>
         /// Update
         /// </summary>
-        public override void Update()
+        public void Update(List<MapObject> objects = null)
         {
             switch (MoveScript)
             {
                 case 0:
-                    ExecuteMoveScript1();
+                    State = PersonState.Standing;
+                    break;
+                case 1:
+                    ExecuteMoveScript1(objects);
+                    break;
+                case 2:
+                    ExecuteMoveScript2(objects);
                     break;
             }
 
@@ -180,9 +191,9 @@ namespace monorpg
         }
 
         /// <summary>
-        /// Executes move script number 1
+        /// Executes move script number 1, normal RPG NPC Wandering
         /// </summary>
-        public void ExecuteMoveScript1()
+        public void ExecuteMoveScript1(List<MapObject> objects = null)
         {
             if (Counter0 <= 0)
             {
@@ -211,7 +222,7 @@ namespace monorpg
                                 break;
                         }
                         State = PersonState.Walking;
-                        Counter0 = random.Next(32, 150);
+                        Counter0 = random.Next(32, 300);
                     }
                 }
                 else
@@ -223,8 +234,132 @@ namespace monorpg
             else
             {
                 Counter0--;
+                if (State == PersonState.Standing)
+                {
+                    switch (Direction)
+                    {
+                        case Facing.East:
+                            break;
+                        case Facing.West:
+                            break;
+                        case Facing.North:
+                            break;
+                        case Facing.South:
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (Direction)
+                    {
+                        case Facing.East:
+                            PositionX += 2f;
+                            break;
+                        case Facing.West:
+                            PositionX -= 2f;
+                            break;
+                        case Facing.North:
+                            PositionY -= 2f;
+                            break;
+                        case Facing.South:
+                            PositionY += 2f;
+                            break;
+                    }
+
+                    if (PositionX < 0)
+                    {
+                        PositionX = 0;
+                        RanIntoSomething = true;
+                    }
+                    if (PositionX > Settings.MapSize.X - BoundingBoxWidth)
+                    {
+                        PositionX = Settings.MapSize.X - BoundingBoxWidth;
+                        RanIntoSomething = true;
+                    }
+                    if (PositionY < 0)
+                    {
+                        PositionY = 0;
+                        RanIntoSomething = true;
+                    }
+                    if (PositionY > Settings.MapSize.Y - BoundingBoxHeight)
+                    {
+                        PositionY = Settings.MapSize.Y - BoundingBoxHeight;
+                        RanIntoSomething = true;
+                    }
+                    if (RanIntoSomething)
+                    {
+                        RanIntoSomething = false;
+                        int dir = random.Next(4);
+                        switch (dir)
+                        {
+                            case 0:
+                                Direction = Facing.North;
+                                break;
+                            case 1:
+                                Direction = Facing.South;
+                                break;
+                            case 2:
+                                Direction = Facing.East;
+                                break;
+                            case 3:
+                                Direction = Facing.West;
+                                break;
+                        }
+                        State = PersonState.Walking;
+                        Counter0 = random.Next(32, 300);
+                    }
+                }
             }
         }
+
+        /// <summary>
+        /// Executes move script number 2
+        /// </summary>
+        public void ExecuteMoveScript2(List<MapObject> objects = null)
+        {
+            if (Counter0 <= 0)
+            {
+                int dir = random.Next(4);
+                switch (dir)
+                {
+                    case 0:
+                        Direction = Facing.North;
+                        break;
+                    case 1:
+                        Direction = Facing.South;
+                        break;
+                    case 2:
+                        Direction = Facing.East;
+                        break;
+                    case 3:
+                        Direction = Facing.West;
+                        break;
+                }
+                State = PersonState.Walking;
+                Counter0 = random.Next(32, 300);
+            }
+            else
+            {
+                Counter0--;
+                switch (Direction)
+                {
+                    case Facing.East:
+                        PositionX += 2f;
+                        break;
+                    case Facing.West:
+                        PositionX -= 2f;
+                        break;
+                    case Facing.North:
+                        PositionY -= 2f;
+                        break;
+                    case Facing.South:
+                        PositionY += 2f;
+                        break;
+                }
+
+            }
+        }
+
 
         /// <summary>
         /// draw

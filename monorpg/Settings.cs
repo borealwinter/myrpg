@@ -65,6 +65,8 @@ namespace monorpg
             }
         }
 
+
+        public static Vector2 MapSize { get; set; }
         /// <summary>
         /// Graphics Device Manager
         /// </summary>

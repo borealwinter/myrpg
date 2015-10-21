@@ -91,6 +91,7 @@ namespace monorpg
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
@@ -101,5 +102,6 @@ namespace monorpg
 
             base.Draw(gameTime);
         }
+
     }
 }

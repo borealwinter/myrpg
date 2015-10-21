@@ -260,6 +260,9 @@ namespace monorpg
             }
         }
 
+
+        public bool RanIntoSomething { get; set; }
+
         #endregion
 
         #region Methods

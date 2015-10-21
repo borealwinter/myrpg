@@ -44,9 +44,12 @@ namespace monorpg
         private static Vector2 _offset;
 
         private static Avatar player;
+        private static NPCPerson npc1;
+
+
         private static SpriteFont font;
         private static List<Texture2D> visibleBoundaries;
-        private static bool showBoundaries = true;
+        private static bool showBoundaries = false;
 
 
         #endregion
@@ -285,7 +288,9 @@ namespace monorpg
         {
             IsMapLoaded = false;
             loadTmxMap(fileName);
-
+            //If p < s / 2, then c := 0. 
+            //If p > m - (s / 2), then c := m - s. 
+            //Otherwise, c := p - (s / 2). 
             IsMapLoaded = true;
         }
 
@@ -307,33 +312,41 @@ namespace monorpg
         /// </summary>
         public static void UpdateVertical()
         {
-            if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
+            if (_map.Height * 32 > Settings.ScreenSize.Y)
             {
-                verticalScrolling = false;
-            }
-            else
-            {
-                verticalScrolling = true;
-            }
-
-            if (verticalScrolling)
-            {
-                player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
-                Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
-            }
-            else
-            {
-                player.ScreenPositionY += player.PositionY - lastPlayer.Y;
-
-                if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                if (((player.PositionY) < Settings.DefaultPersonPosition.Y) || (player.PositionY > (Map.Height - Settings.DefaultPersonPosition.Y - 45f)))
                 {
-                    Map.OffsetY = 0f;
-                    player.ScreenPositionY = player.PositionY;
+                    verticalScrolling = false;
                 }
                 else
                 {
-                    Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                    verticalScrolling = true;
                 }
+
+                if (verticalScrolling)
+                {
+                    player.ScreenPositionY = Settings.DefaultPersonPosition.Y;
+                    Map.OffsetY = player.PositionY - Settings.DefaultPersonPosition.Y;
+                }
+                else
+                {
+                    player.ScreenPositionY += player.PositionY - lastPlayer.Y;
+
+                    if (player.PositionY <= Settings.DefaultPersonPosition.Y)
+                    {
+                        Map.OffsetY = 0f;
+                        player.ScreenPositionY = player.PositionY;
+                    }
+                    else
+                    {
+                        Map.OffsetY = Map.Height - Settings.ScreenSize.Y;
+                    }
+                }
+            }
+            else
+            {
+                Map.OffsetY = 0f;
+                player.ScreenPositionY = player.PositionY;
             }
         }
 
@@ -342,35 +355,42 @@ namespace monorpg
         /// </summary>
         public static void UpdateHorizontal()
         {
-            if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
+            if (_map.Width * 32 > Settings.ScreenSize.X)
             {
-                horizontalScrolling = false;
-            }
-            else
-            {
-                horizontalScrolling = true;
-            }
-
-            if (horizontalScrolling)
-            {
-                player.ScreenPositionX = Settings.DefaultPersonPosition.X;
-                Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
-            }
-            else
-            {
-                player.ScreenPositionX += player.PositionX - lastPlayer.X;
-
-                if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                if (((player.PositionX) < Settings.DefaultPersonPosition.X) || (player.PositionX > (Map.Width - Settings.DefaultPersonPosition.X - 32f)))
                 {
-                    Map.OffsetX = 0f;
-                    player.ScreenPositionX = player.PositionX;
+                    horizontalScrolling = false;
                 }
                 else
                 {
-                    Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                    horizontalScrolling = true;
+                }
+
+                if (horizontalScrolling)
+                {
+                    player.ScreenPositionX = Settings.DefaultPersonPosition.X;
+                    Map.OffsetX = player.PositionX - Settings.DefaultPersonPosition.X;
+                }
+                else
+                {
+                    player.ScreenPositionX += player.PositionX - lastPlayer.X;
+
+                    if (player.PositionX <= Settings.DefaultPersonPosition.X)
+                    {
+                        Map.OffsetX = 0f;
+                        player.ScreenPositionX = player.PositionX;
+                    }
+                    else
+                    {
+                        Map.OffsetX = Map.Width - Settings.ScreenSize.X;
+                    }
                 }
             }
-
+            else
+            {
+                Map.OffsetX = 0f;
+                player.ScreenPositionX = player.PositionX;
+            }
         }
 
         /// <summary>
@@ -518,6 +538,8 @@ namespace monorpg
             // TODO: Add your update logic here
             player.Update();
 
+            npc1.Update();
+
         }
 
         /// <summary>
@@ -533,8 +555,9 @@ namespace monorpg
             _sizey = _map.Height;
             _tiles = new List<Rectangle>();
             _tiles.Add(new Rectangle(0, 0, 0, 0));
+            var tileSetSize = (_tileset.Width / Settings.TileSize) * (_tileset.Height / Settings.TileSize);
 
-            for (int i = 0; i < TilesPerLayer; i++)
+            for (int i = 0; i < tileSetSize; i++)
             {
                 int x = (i % (_tileset.Width / Settings.TileSize)) * Settings.TileSize;
                 int y = (i / (_tileset.Width / Settings.TileSize)) * Settings.TileSize;
@@ -579,6 +602,8 @@ namespace monorpg
                 }
             }
 
+            Settings.MapSize = new Vector2(_map.Width * 32, _map.Height * 32);
+
             IsScrollable = (_map.Width > 20 || _map.Height > 15) ? true : false;
 
             _offset = new Vector2(0f, 0f);
@@ -588,10 +613,21 @@ namespace monorpg
             player.State = PersonState.Walking;
             player.Speed = 10;
             player.Tint = Color.White;
-            player.Position = new Vector2(600, 600);
+            //player.Position = new Vector2(600, 600);
+            player.Position = new Vector2(75, 75);
             //player.ScreenPosition = new Vector2(125, 125);
+
+            npc1 = new NPCPerson("brunette00");
+            npc1.Direction = Facing.South;
+            npc1.State = PersonState.Standing;
+            npc1.Tint = Color.White;
+            npc1.Position = new Vector2(500, 500);
+            npc1.Speed = 9;
+            npc1.MoveScript = 1;
             //_objects.Add(player);
+
             font = Settings.Content.Load<SpriteFont>("ExFont");
+
         }
 
         /// <summary>
@@ -599,6 +635,31 @@ namespace monorpg
         /// </summary>
         public static void DrawForegroundLayers()
         {
+            //foreach (var layer in _map.Layers)
+            //{
+            //    if (layer.Name.ToLower().Contains("foreground"))
+            //    {
+            //        for (var i = 0; i < layer.Tiles.Count; i++)
+            //        {
+            //            int gid = layer.Tiles[i].Gid;
+
+            //            if (gid > 0)
+            //            {
+            //                int tileFrame = gid - 1;
+            //                int column = tileFrame % (_tileset.Width / Settings.TileSize);
+            //                int row = tileFrame / (_tileset.Height / Settings.TileSize);
+
+            //                float x = (i % _map.Width) * _map.TileWidth;
+            //                float y = (float)Math.Floor(i / (double)_map.Width) * _map.TileHeight;
+
+            //                Rectangle tilesetRec = new Rectangle(Settings.TileSize * column, Settings.TileSize * row, 32, 32);
+
+            //                Settings.SpriteBatch.Draw(_tileset, new Rectangle((int)x, (int)y, 32, 32), tilesetRec, Color.White);
+            //            }
+            //        }
+            //    }
+            //}
+
             int k = 0;
             foreach (var layer in _map.Layers)
             {
@@ -631,31 +692,64 @@ namespace monorpg
         /// </summary>
         public static void DrawBackgroundLayers()
         {
-            int k = 0;
-            foreach (var layer in _map.Layers)
-            {
-                if (layer.Name.ToLower().Contains("background"))
-                {
-                    for (int j = 0; j < _map.Height; j++)
-                    {
-                        for (int i = 0; i < _map.Width; i++)
-                        {
-                            int gid = layer.Tiles[k].Gid;
-                            if (gid > 0)
-                            {
-                                int xDraw = ((i * 32)) - (int)_offset.X;
-                                int yDraw = ((j * 32)) - (int)_offset.Y;
+            //foreach (var layer in _map.Layers)
+            //{
+            //    if (layer.Name.ToLower().Contains("background"))
+            //    {
+            //        for (var i = 0; i < layer.Tiles.Count; i++)
+            //        {
+            //            int gid = layer.Tiles[i].Gid;
 
-                                if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+            //            if (gid > 0)
+            //            {
+            //                int tileFrame = gid - 1;
+            //                int column = tileFrame % (_tileset.Width / Settings.TileSize);
+            //                int row = tileFrame / (_tileset.Height / Settings.TileSize);
+
+            //                float x = (i % _map.Width) * _map.TileWidth;
+            //                float y = (float)Math.Floor(i / (double)_map.Width) * _map.TileHeight;
+
+            //                Rectangle tilesetRec = new Rectangle(Settings.TileSize * column, Settings.TileSize * row, 32, 32);
+
+            //                Settings.SpriteBatch.Draw(_tileset, new Rectangle((int)x, (int)y, 32, 32), tilesetRec, Color.White);
+            //            }
+            //        }
+            //    }
+            //}
+            try
+            {
+                int k = 0;
+                foreach (var layer in _map.Layers)
+                {
+                    if (layer.Name.ToLower().Contains("background"))
+                    {
+                        for (int j = 0; j < _map.Height; j++)
+                        {
+                            for (int i = 0; i < _map.Width; i++)
+                            {
+                                int gid = layer.Tiles[k].Gid;
+                                if (gid > 0)
                                 {
-                                    Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                    int xDraw = ((i * 32)) - (int)_offset.X;
+                                    int yDraw = ((j * 32)) - (int)_offset.Y;
+
+                                    if ((xDraw > (-32)) || (xDraw < 640) || (yDraw > (-32)) || (xDraw < 480))
+                                    {
+                                        Settings.SpriteBatch.Draw(_tileset, new Rectangle(xDraw, yDraw, 32, 32), _tiles[gid], Color.White);
+                                    }
                                 }
+                                k++;
                             }
-                            k++;
                         }
                     }
                 }
+
             }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         /// <summary>
@@ -671,6 +765,8 @@ namespace monorpg
 
                 Vector2 pos = new Vector2(player.ScreenPositionX, player.ScreenPositionY - 25f);
                 player.Draw(pos);
+                Vector2 pos2 = npc1.Position - Offset;
+                npc1.Draw(pos2);
 
                 DrawForegroundLayers();
 
@@ -693,6 +789,44 @@ namespace monorpg
             for (int i = 0; i < _objects.Count; i++)
             {
                 Settings.SpriteBatch.Draw(visibleBoundaries[i], new Vector2(_objects[i].BoundingBox.X - Map.OffsetX, _objects[i].BoundingBox.Y - Map.OffsetY), Color.White);
+            }
+        }
+
+        /// <summary>
+        /// Draws the scene
+        /// </summary>
+        public static void __testDraw()
+        {
+            if (IsMapLoaded)
+            {
+                for (var i = 0; i < _map.Layers[0].Tiles.Count; i++)
+                {
+                    int gid = _map.Layers[0].Tiles[i].Gid;
+
+                    // Empty tile, do nothing
+                    if (gid == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        int tileFrame = gid - 1;
+                        int column = tileFrame % (_tileset.Width / Settings.TileSize);
+                        int row = tileFrame / (_tileset.Height / Settings.TileSize);
+
+                        float x = (i % _map.Width) * _map.TileWidth;
+                        float y = (float)Math.Floor(i / (double)_map.Width) * _map.TileHeight;
+
+                        Rectangle tilesetRec = new Rectangle(Settings.TileSize * column, Settings.TileSize * row, 32, 32);
+
+                        Settings.SpriteBatch.Draw(_tileset, new Rectangle((int)x, (int)y, 32, 32), tilesetRec, Color.White);
+                    }
+                }
+
+
+                Settings.SpriteBatch.DrawString(font,
+                    String.Concat("X: ", player.PositionX, "  Y: ", player.PositionY, "  SX: ", player.ScreenPositionX, "  SY: ", player.ScreenPositionY),
+                    Vector2.Zero, Color.White);
             }
         }
 
