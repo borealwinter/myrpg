@@ -249,9 +249,9 @@ namespace monorpg
         /// <summary>
         /// Updates person
         /// </summary>
-        public override void Update()
+        public override void Update(List<MapObject> objects = null)
         {
-            if (this is Avatar)
+            if (true)
             {
                 BoundingBoxHeight = 22;
                 BoundingBoxWidth = 31;

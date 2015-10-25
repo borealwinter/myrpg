@@ -45,10 +45,12 @@ namespace monorpg
 
         private static Avatar player;
         private static NPCPerson npc1;
+        private static NPCPerson npc2;
 
 
         private static SpriteFont font;
         private static List<Texture2D> visibleBoundaries;
+        private static Texture2D npcBounds;
         private static bool showBoundaries = false;
         //private static bool showBoundaries = true;
 
@@ -286,11 +288,11 @@ namespace monorpg
         /// <param name="fileName">name of file</param>
         public static void Load(string fileName)
         {
-            IsMapLoaded = false;
-            loadTmxMap(fileName);
             //If p < s / 2, then c := 0. 
             //If p > m - (s / 2), then c := m - s. 
             //Otherwise, c := p - (s / 2). 
+            IsMapLoaded = false;
+            loadTmxMap(fileName);
             IsMapLoaded = true;
         }
 
@@ -437,10 +439,13 @@ namespace monorpg
 
                     foreach (MapObject obj in _objects)
                     {
-                        if (player.Collision(obj))
+                        if (player.Name != obj.Name)
                         {
-                            player.MoveToTheBottomOf(obj);
-                            player.State = PersonState.Standing;
+                            if (player.Collision(obj))
+                            {
+                                player.MoveToTheBottomOf(obj);
+                                player.State = PersonState.Standing;
+                            }
                         }
                     }
 
@@ -465,10 +470,13 @@ namespace monorpg
 
                     foreach (MapObject obj in _objects)
                     {
-                        if (player.Collision(obj))
+                        if (player.Name != obj.Name)
                         {
-                            player.MoveToTheTopOf(obj);
-                            player.State = PersonState.Standing;
+                            if (player.Collision(obj))
+                            {
+                                player.MoveToTheTopOf(obj);
+                                player.State = PersonState.Standing;
+                            }
                         }
                     }
 
@@ -493,10 +501,13 @@ namespace monorpg
 
                     foreach (MapObject obj in _objects)
                     {
-                        if (player.Collision(obj))
+                        if (player.Name != obj.Name)
                         {
-                            player.MoveToTheRightOf(obj);
-                            player.State = PersonState.Standing;
+                            if (player.Collision(obj))
+                            {
+                                player.MoveToTheRightOf(obj);
+                                player.State = PersonState.Standing;
+                            }
                         }
                     }
 
@@ -521,11 +532,15 @@ namespace monorpg
 
                     foreach (MapObject obj in _objects)
                     {
-                        if (player.Collision(obj))
+                        if (player.Name != obj.Name)
                         {
-                            player.MoveToTheLeftOf(obj);
-                            player.State = PersonState.Standing;
+                            if (player.Collision(obj))
+                            {
+                                player.MoveToTheLeftOf(obj);
+                                player.State = PersonState.Standing;
+                            }
                         }
+
                     }
 
                     UpdateHorizontal();
@@ -536,9 +551,17 @@ namespace monorpg
             //player.BoundingBoxWidth = 31;
 
             // TODO: Add your update logic here
-            player.Update();
 
-            npc1.Update(_objects);
+            for (int i = 0; i < _objects.Count; i++)
+            {
+
+                _objects[i].Update(_objects);
+            }
+
+            //player.Update();
+            //npc1.Update(_objects);
+            //npc2.Update(_objects);
+            _objects.Sort();
 
         }
 
@@ -579,14 +602,16 @@ namespace monorpg
                              select objectGroup).ToList();
 
             _objects = new List<MapObject>();
-
+            int j = 0;
             foreach (TmxObjectGroup objectGroup in _objectGroups)
             {
                 if (objectGroup.Name == _BarrierObjects)
                 {
                     foreach (TmxObject obj in objectGroup.Objects)
                     {
-                        _objects.Add(new Boundary((float)obj.X, (float)obj.Y, (int)obj.Width, (int)obj.Height));
+                        Boundary b = new Boundary((float)obj.X, (float)obj.Y, (int)obj.Width, (int)obj.Height);
+                        b.Name = String.Concat(_BarrierObjects, j.ToString());
+                        _objects.Add(b);
 
                         if (showBoundaries)
                         {
@@ -615,16 +640,32 @@ namespace monorpg
             player.Tint = Color.White;
             //player.Position = new Vector2(600, 600);
             player.Position = new Vector2(76, 200);
+            player.Name = "Albert";
             //player.ScreenPosition = new Vector2(125, 125);
 
-            npc1 = new NPCPerson("brunette00");
+            npc1 = new NPCPerson("brunette00", 1);
             npc1.Direction = Facing.South;
             npc1.State = PersonState.Standing;
             npc1.Tint = Color.White;
-            npc1.Position = new Vector2(400, 200);
             npc1.Speed = 9;
             npc1.MoveScript = 1;
-            //_objects.Add(player);
+            npc1.Name = "npc1";
+            //npc1.BoundingBox = new Rectangle(0, 0, 48, 64);
+            //Rectangle r = new Rectangle(0, 0, npc1.BoundingBoxWidth, npc1.BoundingBoxHeight);
+            //npcBounds = Settings.CreateTexture(r, new Color(0f, 0.1f, 1f, 0.3f));
+            npc1.Position = new Vector2(400, 200);
+
+            npc2 = new NPCPerson("siriusboss", 3);
+            npc2.Direction = Facing.South;
+            npc2.State = PersonState.Standing;
+            npc2.Tint = Color.White;
+            npc2.Speed = 9;
+            npc2.MoveScript = 1;
+            npc2.Position = new Vector2(300, 300);
+            npc2.Name = "npc2";
+            _objects.Add(player);
+            _objects.Add(npc1);
+            _objects.Add(npc2);
 
             font = Settings.Content.Load<SpriteFont>("ExFont");
 
@@ -763,10 +804,30 @@ namespace monorpg
             {
                 DrawBackgroundLayers();
 
-                Vector2 pos = new Vector2(player.ScreenPositionX, player.ScreenPositionY - 25f);
-                player.Draw(pos);
-                Vector2 pos2 = npc1.Position - Offset;
-                npc1.Draw(pos2);
+                for (int i = 0; i < _objects.Count; i++)
+                {
+                    if (_objects[i] is Avatar)
+                    {
+                        Vector2 pos = new Vector2(_objects[i].ScreenPositionX, _objects[i].ScreenPositionY);
+                        _objects[i].Draw(pos);
+                    }
+                    if (_objects[i] is NPCPerson)
+                    {
+                        Vector2 pos = new Vector2(_objects[i].PositionX, _objects[i].PositionY);
+                        pos -= Offset;
+                        _objects[i].Draw(pos);
+                    }
+                }
+
+                //Vector2 pos = new Vector2(player.ScreenPositionX, player.ScreenPositionY);
+                //player.Draw(pos);
+                //Vector2 pos2 = new Vector2(npc1.PositionX, npc1.PositionY);
+                //pos2 -= Offset;
+                //npc1.Draw(pos2);
+                //Vector2 pos3 = new Vector2(npc2.PositionX, npc2.PositionY);
+                //pos3 -= Offset;
+                //npc2.Draw(pos3);
+                //Settings.SpriteBatch.Draw(npcBounds,npc1.BoundingBox,Color.White);
 
                 DrawForegroundLayers();
 

@@ -57,7 +57,7 @@ namespace monorpg
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Settings.SpriteBatch = spriteBatch;
-            Map.Load("test1");
+            Map.Load("test2");
 
         }
 

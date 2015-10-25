@@ -56,7 +56,7 @@ namespace monorpg
         /// <summary>
         /// Updates player
         /// </summary>
-        public override void Update()
+        public override void Update(List<MapObject> objects = null)
         {
             base.Update();
         }
@@ -73,9 +73,9 @@ namespace monorpg
         /// Draws Player at Coordinates
         /// </summary>
         /// <param name="screenPosition"></param>
-        public void Draw(Vector2 screenPosition)
+        public override void Draw(Vector2 screenPosition)
         {
-            Settings.SpriteBatch.Draw(_spriteSheet, screenPosition, _sourceRect, _color);
+            Settings.SpriteBatch.Draw(_spriteSheet, new Vector2(screenPosition.X, screenPosition.Y - 25f), _sourceRect, _color);
         }
     }
 }

@@ -60,10 +60,15 @@ namespace monorpg
             //Do nothing
         }
 
+        public override void Draw(Vector2 screenPosition)
+        {
+            //Do nothing
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        public override void Update()
+        public override void Update(List<MapObject> objects = null)
         {
             //throw new NotImplementedException();
         }

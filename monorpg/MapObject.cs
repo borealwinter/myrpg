@@ -333,12 +333,15 @@ namespace monorpg
         /// <summary>
         /// Update Cycle
         /// </summary>
-        public abstract void Update();
+        public abstract void Update(List<MapObject> objects = null);
 
         /// <summary>
         /// Draw Cycle
         /// </summary>
         public abstract void Draw();
+
+
+        public abstract void Draw(Vector2 screenPosition);
 
         /// <summary>
         /// Moves this object to the right of that other object

@@ -28,6 +28,16 @@ namespace monorpg
         }
 
         /// <summary>
+        /// Constructor with seed;
+        /// </summary>
+        /// <param name="seed"></param>
+        public NPCPerson(string spriteSheet, int seed)
+        {
+            _spriteSheet = Settings.Content.Load<Texture2D>(spriteSheet);
+            random = new Random(seed);
+        }
+
+        /// <summary>
         /// Constructor with image
         /// </summary>
         /// <param name="spriteSheet">name of spritesheet</param>
@@ -167,12 +177,12 @@ namespace monorpg
         /// <summary>
         /// Dummy update for now
         /// </summary>
-        public override void Update() { }
+        //public override void Update() { }
 
         /// <summary>
         /// Update
         /// </summary>
-        public void Update(List<MapObject> objects = null)
+        public override void Update(List<MapObject> objects = null)
         {
             switch (MoveScript)
             {
@@ -313,42 +323,49 @@ namespace monorpg
                     {
                         for (int i = 0; i < objects.Count; i++)
                         {
-                            if (BoundingBox.Intersects(objects[i].BoundingBox))
+                            if (Name != objects[i].Name)
                             {
-                                switch (Direction)
+                                if (BoundingBox.Intersects(objects[i].BoundingBox))
                                 {
-                                    case Facing.North:
-                                        BoundingBoxHeight = (int)objects[i].PositionY + objects[i].BoundingBoxHeight;
-                                        break;
-                                    case Facing.South:
-                                        BoundingBoxHeight = (int)objects[i].PositionY - BoundingBoxHeight;
-                                        break;
-                                    case Facing.East:
-                                        BoundingBoxWidth = (int)objects[i].PositionX - BoundingBoxWidth;
-                                        break;
-                                    case Facing.West:
-                                        BoundingBoxHeight = (int)objects[i].PositionX + objects[i].BoundingBoxWidth;
-                                        break;
-                                }
-                                int dir = random.Next(4);
-                                switch (dir)
-                                {
-                                    case 0:
-                                        Direction = Facing.North;
-                                        break;
-                                    case 1:
-                                        Direction = Facing.South;
-                                        break;
-                                    case 2:
-                                        Direction = Facing.East;
-                                        break;
-                                    case 3:
-                                        Direction = Facing.West;
-                                        break;
-                                }
+                                    switch (Direction)
+                                    {
+                                        case Facing.North:
+                                            BoundingBoxHeight = (int)objects[i].PositionY + objects[i].BoundingBoxHeight;
+                                            Direction = Facing.South;
+                                            break;
+                                        case Facing.South:
+                                            BoundingBoxHeight = (int)objects[i].PositionY - BoundingBoxHeight;
+                                            Direction = Facing.North;
+                                            break;
+                                        case Facing.East:
+                                            BoundingBoxWidth = (int)objects[i].PositionX - BoundingBoxWidth;
+                                            Direction = Facing.West;
+                                            break;
+                                        case Facing.West:
+                                            BoundingBoxHeight = (int)objects[i].PositionX + objects[i].BoundingBoxWidth;
+                                            Direction = Facing.East;
+                                            break;
+                                    }
+                                    //int dir = random.Next(4);
+                                    //switch (dir)
+                                    //{
+                                    //    case 0:
+                                    //        Direction = Facing.North;
+                                    //        break;
+                                    //    case 1:
+                                    //        Direction = Facing.South;
+                                    //        break;
+                                    //    case 2:
+                                    //        Direction = Facing.East;
+                                    //        break;
+                                    //    case 3:
+                                    //        Direction = Facing.West;
+                                    //        break;
+                                    //}
 
-                                State = PersonState.Walking;
-                                Counter0 = random.Next(32, 300);
+                                    //State = PersonState.Walking;
+                                    //Counter0 = random.Next(32, 300);
+                                }
                             }
                         }
                     }
@@ -417,9 +434,9 @@ namespace monorpg
         /// Draws person
         /// </summary>
         /// <param name="screenPosition">position on screen to draw</param>
-        public void Draw(Vector2 screenPosition)
+        public override void Draw(Vector2 screenPosition)
         {
-            Settings.SpriteBatch.Draw(_spriteSheet, screenPosition, _sourceRect, _color);
+            Settings.SpriteBatch.Draw(_spriteSheet, new Vector2(screenPosition.X, screenPosition.Y - 25f), _sourceRect, _color);
         }
 
         #endregion

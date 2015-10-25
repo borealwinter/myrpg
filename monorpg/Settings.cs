@@ -87,7 +87,7 @@ namespace monorpg
             Texture2D texture;
             try
             {
-                texture = new Texture2D(GraphicsDeviceManager.GraphicsDevice, size.Width, size.Height);
+                texture = new Texture2D(Settings.GraphicsDeviceManager.GraphicsDevice, size.Width, size.Height);
                 Color[] data = new Color[texture.Width * texture.Height];
                 texture.GetData(data);
                 for (int i = 0; i < data.Length; i++)
