@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Avatar.cs" />
     <Compile Include="Boundary.cs" />
+    <Compile Include="DialogBox.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Map.cs" />

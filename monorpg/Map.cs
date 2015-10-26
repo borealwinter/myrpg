@@ -411,6 +411,15 @@ namespace monorpg
             lastPlayer = new Vector2(player.PositionX, player.PositionY);
             lastOffset = new Vector2(Map.OffsetX, Map.OffsetY);
 
+            try
+            {
+                DialogBox.SetText("Hello World. My name is Robert Reed The Third.", "This is a test.", "of my new game. ", false);
+            }
+            catch (Exception ex)
+            {
+                var x = 0;
+            }
+
             if (!Input.AreAnyDirectionButtonsDown())
             {
                 player.State = PersonState.Standing;
@@ -835,6 +844,8 @@ namespace monorpg
                 {
                     DrawBoundaries();
                 }
+
+                DialogBox.Draw();
 
                 Settings.SpriteBatch.DrawString(font,
                     String.Concat("X: ", player.PositionX, "  Y: ", player.PositionY, "  SX: ", player.ScreenPositionX, "  SY: ", player.ScreenPositionY),
