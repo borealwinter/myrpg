@@ -85,6 +85,12 @@
 /processorParam:TextureFormat=Color
 /build:siriusboss.png
 
+#begin dialogfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:dialogfont.spritefont
+
 #begin dialog.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -95,10 +101,4 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:TextureFormat=Color
 /build:dialog.png
-
-#begin dialogfont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:TextureFormat=Compressed
-/build:dialogfont.spritefont
 
